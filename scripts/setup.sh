@@ -239,8 +239,6 @@ display_config() {
         No)
             exit;;
     esac
-
-
 }
 
 
