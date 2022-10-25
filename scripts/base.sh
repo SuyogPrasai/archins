@@ -21,14 +21,14 @@ timedatectl set-ntp true
 timedatectl status
 
 # Partitoningn drives
-auto_partiton() {
+auto_partition() {
 
     TOTAL_MEM=$(cat /proc/meminfo | grep -i 'memtotal' | grep -o '[[:digit:]]*')
     if [[ $TOTAL_MEM -lt 8000000 ]]; then
         swap=TRUE
     fi
 
-    partiton_now() {
+    partition_now() {
            local command="g\nn\n\n\n+550M\nn\n\n\n\nt\n1\n1\nw"
            echo -e $command | fdisk ${DISK}
     }
@@ -40,7 +40,7 @@ auto_partiton() {
     do_install "${pkgs[@]}"
 
     info_msg "Formatting disk"
-    unmount -A --recursive /mnt # make sure everything is unmounted before we start
+    umount -A --recursive /mnt # make sure everything is unmounted before we start
 
     partition_now # Create partitions
 
@@ -55,3 +55,5 @@ auto_partiton() {
     partprobe ${DISK}
 
 }
+
+auto_partition
