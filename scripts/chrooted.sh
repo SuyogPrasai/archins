@@ -47,6 +47,7 @@ sudo_config
 
 grub_config() {
 
+    # Installing grub and other essentials
     do_install grub efibootmgr dosfstools os-prober mtools
 
     grub-install --target=x86_64-efi  --bootloader-id=grub_uefi --recheck
