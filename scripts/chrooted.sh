@@ -4,6 +4,10 @@
 # https://github.com/suyogprasai/
 # https://github.ocm/suyogprasai/archins
 
+# Sourcing stuff
+source $CONFIGS_DIR/setup.conf
+source $COMMONRC
+
 # setting up time and locale
 time_and_locale(){
 

@@ -40,7 +40,7 @@ EOF
            ( bash $SCRIPTS_DIR/base.sh ) |& tee $LOGS_DIR/base.log;;
 
         2) # Since we are changing the script directory path variables must be reset
-             ( arch-chroot /mnt $HOME/archins/scripts/chrooted.sh ) |& tee $LOGS_DIR/chrooted.log
+             ( bash $HOME/archins/scripts/chrooted.sh ) |& tee $LOGS_DIR/chrooted.log
            # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
 
     esac
