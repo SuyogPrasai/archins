@@ -9,7 +9,7 @@
 # Sourcing commonrc
 clear
 source $SCRIPTS_DIR/utils/commonrc
-source $CONFIG_DIR/setup.conf
+source $CONFIGS_DIR/setup.conf
 logo
 
 # loading keympap
