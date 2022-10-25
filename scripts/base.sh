@@ -10,6 +10,9 @@ source $SCRIPTS_DIR/utils/commonrc
 source $CONFIGS_DIR/setup.conf
 logo
 
+# optimizing pacman
+pacman_optimize
+
 # loading keympap
 loadkeys $KEYMAP
 info_msg "$KEYMAP keymap loaded"
@@ -76,8 +79,7 @@ fs () {
         mount -o ${MOUNT_OPTIONS},subvol=@var ${partition3} /mnt/var
         mount -o ${MOUNT_OPTIONS},subvol=@.snapshots ${partition3} /mnt/.snapshots
     }
-
-    # @description BTRFS subvolulme creation and mounting.
+# @description BTRFS subvolulme creation and mounting.
     subvolumesetup () {
         # create nonroot subvolumes
         createsubvolumes
@@ -108,7 +110,7 @@ fs () {
 fs # Making filesystems
 
 mkdir -p /mnt/boot/EFI
-mount ${parition1} /mnt/boot
+mount ${partition1} /mnt/boot
 
 # Installing base packages
 pacstrap /mnt base base-devel linux linux-firmware vim nano sudo archlinux-keyring wget libnewt --noconfirm --needed
@@ -120,56 +122,22 @@ info_msg "Generated fstab"
 cat /mnt/etc/fstab
 
 
-# Chroot
+linux_swap() {
+
+    TOTAL_MEM=$(cat /proc/meminfo | grep -i 'memtotal' | grep -o '[[:digit:]]*')
+    if [[  $TOTAL_MEM -lt 8000000 ]]; then
+    # Put swap into the actual system, not into RAM disk, otherwise there is no point in it, it'll cache RAM into RAM. So, /mnt/ everything.
+    mkdir -p /mnt/opt/swap # make a dir that we can apply NOCOW to to make it btrfs-friendly.
+    chattr +C /mnt/opt/swap # apply NOCOW, btrfs needs that.
+    dd if=/dev/zero of=/mnt/opt/swap/swapfile bs=1M count=2048 status=progress
+    chmod 600 /mnt/opt/swap/swapfile # set permissions.
+    chown root /mnt/opt/swap/swapfile
+    mkswap /mnt/opt/swap/swapfile
+    swapon /mnt/opt/swap/swapfile
+    # The line below is written to /mnt/ but doesn't contain /mnt/, since it's just / for the system itself.
+    echo "/opt/swap/swapfile	none	swap	sw	0	0" >> /mnt/etc/fstab # Add swap to fstab, so it KEEPS working after installation.
+fi
+}
+
+# Executing Chroot
 arch-chroot /mnt
-
-
-time_and_locale(){
-
-    ln -sf /usr/share/zoneinfo/$TIMEZONE  /etc/localtime # Sets local time
-    hwclock --systohc
-
-    sed -i '/^#\(en_US.UTF-8\|zh_CN.UTF-8\|zh_HK.UTF-8\|zh_TW.UTF-8\)/s/#//' /etc/locale.gen
-    locale-gen
-    echo "LANG=en_US.UTF-8" > /etc/locale.conf
-}
-
-time_and_locale
-
-set_hostname() {
-    hostname=$NAME_OF_MACHINE
-    echo ${hostname} >> /etc/hostname
-    echo -e "\n127.0.0.1   localhost\n::1     localhost\n127.0.1.1   ${hostname}.localdomain  ${hostname}\n" >> /etc/hosts
-}
-
-set_hostname
-
-echo $ROOT_PASSWORD | passwd
-useradd -m $USERNAME
-echo $PASSWORD | passwd $USERNAME
-usermod -aG wheel,audio,video,optical,storage $USERNAME
-
-sudo_config() {
-
-    sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
-    # sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
-
-}
-
-sudo_config
-
-grub_config() {
-
-    do_install "grub efibootmgr dosfstools os-prober mtools"
-
-    grub-install --target=x86_64-efi  --bootloader-id=grub_uefi --recheck
-    grub-mkconfig -o /boot/grub/grub.cfg
-}
-
-network_config() {
-
-    do_install "networkmanager"
-    systemctl enable NetworkManager
-}
-
-exit
