@@ -136,10 +136,10 @@ timezone() {
     options=(Yes No)
     select_option "System detected your timezone to be $time_zone. \nIs this correct?" "${options[@]}"
     case ${options[$ans]} in
-        Y|y)
-            echo "$time_zone set as timezone."
+        Yes)
+            info_msg "$time_zone set as timezone."
             set_option TIMEZONE $time_zone;;
-        N|n)
+        No)
             read -p "Please enter your desired timezone e.g. Europe/London: " new_timezone
             info_msg "${new_timezone} set as timezone"
             set_option TIMEZONE $new_timezone;;
@@ -239,7 +239,7 @@ display_config() {
             info_msg "Configuration completed!!!!";;
 
         No)
-            exit;;
+            exit -1;;
     esac
 }
 

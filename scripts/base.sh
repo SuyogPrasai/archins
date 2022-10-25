@@ -161,6 +161,3 @@ linux_swap() {
 }
 
 linux_swap
-
-# Executing Chroot
-arch-chroot /mnt
