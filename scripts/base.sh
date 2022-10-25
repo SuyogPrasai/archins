@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # @suyogprasai
 # https://github.com/suyogprasai/
@@ -155,6 +155,6 @@ info_msg "partitions successfully made"
 
  }
 
- linux_swap
+linux_swap
 arch-chroot /mnt
- cecho "The live cd part is now concluded and execute the other scripts located /mnt/root/archins" $yellow
+cecho "The live cd part is now concluded and execute the other scripts located /mnt/root/archins" $yellow

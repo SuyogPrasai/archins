@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
 # @suyogprasai
 # https://github.com/suyogprasai/
@@ -14,7 +14,7 @@ time_and_locale(){
     ln -sf /usr/share/zoneinfo/$TIMEZONE  /etc/localtime # Sets local time
     hwclock --systohc
 
-    sed -i '/^#\(en_US.UTF-8\|zh_CN.UTF-8\|zh_HK.UTF-8\|zh_TW.UTF-8\)/s/#//' /etc/locale.gen
+    sed -i '/^#\(en_US.UTF-8\)/s/#//' /etc/locale.gen
     locale-gen
     echo "LANG=en_US.UTF-8" > /etc/locale.conf
 }
@@ -40,7 +40,7 @@ usermod -aG wheel,audio,video,optical,storage $USERNAME
 sudo_config() {
 
     sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
-    # sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
+    sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 
 }
 
