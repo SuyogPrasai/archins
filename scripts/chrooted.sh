@@ -21,7 +21,7 @@ time_and_locale(){
 
 time_and_locale
 
-
+do_install sudo wget libnewt
 # Setting up hostname and network stuff
 set_hostname() {
     hostname=$NAME_OF_MACHINE

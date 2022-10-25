@@ -115,7 +115,7 @@ info_msg "partitions successfully made"
 
  # Installing base packages
 
- pacstrap /mnt base base-devel linux linux-firmware vim nano sudo archlinux-keyring wget libnewt --noconfirm --needed
+ pacstrap /mnt base base-devel linux linux-firmware archlinux-keyring --noconfirm --needed
  info_msg "Installed base packages"
 
  # Copying script directory and mirrorlist to main system
