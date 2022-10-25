@@ -172,7 +172,7 @@ pacman_optimize() {
     iso=$(curl -4 ifconfig.co/country-iso)
     pacman -Syy
     local pkgs=("archlinux-keyring" "pacman-contrib" "reflector" "rsync" "grub")
-    required_packages "${pkgs[@]}"
+    do_install "${pkgs[@]}"
 
     # Enabling parallel downloads
     sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
