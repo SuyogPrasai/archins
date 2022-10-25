@@ -44,7 +44,7 @@ auto_partition() {
 
     partition_now # Create partitions
 
-    if  [ "${DISK}" == "nvme" ]; then
+    if  [ "${SSD}" == "TRUE" ]; then
         partition1=${DISK}p1
         partition2=${DISK}p2
     else
@@ -52,6 +52,8 @@ auto_partition() {
         parition2=${DISK}2
     fi
 
+    echo $partition1
+    echo $partition2
     partprobe ${DISK}
 
 }

@@ -162,9 +162,11 @@ drivessd() {
     case $option in
         Yes)
             set_option MOUNT_OPTIONS "noatime,compress=zstd,ssd,commit=120"
+            set_option SSD "TRUE"
             info_msg "This drive is selected as an SSD";;
         No)
             set_option MOUNT_OPTIONS "noatime,compress=zstd,commit=120"
+            set_option SSD "FALSE"
             info_msg "This drive is not selected as an SSD";;
     esac
 }

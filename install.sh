@@ -27,11 +27,11 @@ COMMONRC=$COMMONRC
 
 # NOTE sourcing commonrc
 source $COMMONRC
-
+mkdir $LOGS_DIR
 arch_run() {
 
     ( bash $SCRIPTS_DIR/setup.sh ) |& tee $LOGS_DIR/setup.sh
-    # ( bash $SCRIPTS_DIR/base.sh ) |& tee $LOGS_DIR/base.log
+    ( bash $SCRIPTS_DIR/base.sh ) |& tee $LOGS_DIR/base.log
     # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
 
 }
