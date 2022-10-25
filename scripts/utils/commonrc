@@ -177,5 +177,5 @@ pacman_optimize() {
     # Enabling parallel downloads
     sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
     cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.BAK
-    reflector -a 48 -c "$iso" -f 5 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
+    reflector -a 48 -f 5 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
 }
