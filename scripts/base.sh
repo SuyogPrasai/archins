@@ -106,13 +106,6 @@ info_msg "partitions successfully made"
 
  fs # Making filesystems
 
- # Creating EFI Directory and mounting it
-
- mkdir -p /mnt/boot/EFI
- info_msg "Created /mnt/boot/EFI"
- mount ${partition1} /mnt/boot
- info_msg "mounted $partition1 to /mnt/boot"
-
  # Installing base packages
 
  pacstrap /mnt base base-devel linux linux-firmware archlinux-keyring --noconfirm --needed
@@ -157,5 +150,5 @@ info_msg "partitions successfully made"
 
 linux_swap
 cecho "The live cd part is now concluded and execute the other scripts located /mnt/root/archins" $yellow
-read -p "\nPress any key to continue...."
+read -p "Press any key to continue...."
 arch-chroot /mnt
