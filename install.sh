@@ -29,11 +29,21 @@ COMMONRC=$COMMONRC
 source $COMMONRC
 mkdir $LOGS_DIR
 arch_run() {
+    cat <<EOF
+which part are you in?
+1> livecd part
+2> chrooted part
+EOF
+    check_input 12
+    case $ans in
+        1) ( bash $SCRIPTS_DIR/setup.sh ) |& tee $LOGS_DIR/setup.sh
+           ( bash $SCRIPTS_DIR/base.sh ) |& tee $LOGS_DIR/base.log;;
 
-    ( bash $SCRIPTS_DIR/setup.sh ) |& tee $LOGS_DIR/setup.sh
-    ( bash $SCRIPTS_DIR/base.sh ) |& tee $LOGS_DIR/base.log
-    ( arch-chroot /mnt $HOME/archins/scripts/chrooted.sh ) |& tee $LOGS_DIR/chrooted.log
-    # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
+        2) # Since we are changing the script directory path variables must be reset
+             ( arch-chroot /mnt $HOME/archins/scripts/chrooted.sh ) |& tee $LOGS_DIR/chrooted.log
+           # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
+
+    esac
 
 }
 
