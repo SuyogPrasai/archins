@@ -79,7 +79,8 @@ fs () {
         mount -o ${MOUNT_OPTIONS},subvol=@var ${partition3} /mnt/var
         mount -o ${MOUNT_OPTIONS},subvol=@.snapshots ${partition3} /mnt/.snapshots
     }
-# @description BTRFS subvolulme creation and mounting.
+
+    # @description BTRFS subvolulme creation and mounting.
     subvolumesetup () {
         # create nonroot subvolumes
         createsubvolumes
@@ -109,35 +110,56 @@ fs () {
 
 fs # Making filesystems
 
+# Creating EFI Directory and mounting it
+
 mkdir -p /mnt/boot/EFI
+info_msg "Created /mnt/boot/EFI"
 mount ${partition1} /mnt/boot
+info_msg "mounted $partition1 to /mnt/boot"
 
 # Installing base packages
+
 pacstrap /mnt base base-devel linux linux-firmware vim nano sudo archlinux-keyring wget libnewt --noconfirm --needed
+info_msg "Installed base packages"
+
+# Copying script directory and mirrorlist to main system
 cp -R ${SCRIPT_DIR} /mnt/root/archins
+info_msg "Copying script directory to main system"
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
+info_msg "Copying mirrorlist to main system"
 
+# Generating file system table (FSTAB)
 genfstab -L /mnt >> /mnt/etc/fstab
-info_msg "Generated fstab"
 cat /mnt/etc/fstab
+info_msg "Generated fstab"
 
 
+# Creating linux swap file for systems that require it
 linux_swap() {
 
     TOTAL_MEM=$(cat /proc/meminfo | grep -i 'memtotal' | grep -o '[[:digit:]]*')
     if [[  $TOTAL_MEM -lt 8000000 ]]; then
-    # Put swap into the actual system, not into RAM disk, otherwise there is no point in it, it'll cache RAM into RAM. So, /mnt/ everything.
-    mkdir -p /mnt/opt/swap # make a dir that we can apply NOCOW to to make it btrfs-friendly.
-    chattr +C /mnt/opt/swap # apply NOCOW, btrfs needs that.
-    dd if=/dev/zero of=/mnt/opt/swap/swapfile bs=1M count=2048 status=progress
-    chmod 600 /mnt/opt/swap/swapfile # set permissions.
-    chown root /mnt/opt/swap/swapfile
-    mkswap /mnt/opt/swap/swapfile
-    swapon /mnt/opt/swap/swapfile
-    # The line below is written to /mnt/ but doesn't contain /mnt/, since it's just / for the system itself.
-    echo "/opt/swap/swapfile	none	swap	sw	0	0" >> /mnt/etc/fstab # Add swap to fstab, so it KEEPS working after installation.
-fi
+        # Put swap into the actual system, not into RAM disk, otherwise there is no point in it, it'll cache RAM into RAM. So, /mnt/ everything.
+        mkdir -p /mnt/opt/swap # make a dir that we can apply NOCOW to to make it btrfs-friendly.
+
+        chattr +C /mnt/opt/swap # apply NOCOW, btrfs needs that.
+
+        dd if=/dev/zero of=/mnt/opt/swap/swapfile bs=1M count=2048 status=progress
+
+        chmod 600 /mnt/opt/swap/swapfile # set permissions.
+        chown root /mnt/opt/swap/swapfile
+
+        mkswap /mnt/opt/swap/swapfile
+        swapon /mnt/opt/swap/swapfile
+
+        # The line below is written to /mnt/ but doesn't contain /mnt/, since it's just / for the system itself.
+        echo "/opt/swap/swapfile	none	swap	sw	0	0" >> /mnt/etc/fstab # Add swap to fstab, so it KEEPS working after installation.
+        info_msg "Generated swap"
+    fi
+
 }
+
+linux_swap
 
 # Executing Chroot
 arch-chroot /mnt
