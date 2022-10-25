@@ -1,4 +1,10 @@
+#! /bin/bash
 
+# @suyogprasai
+# https://github.com/suyogprasai/
+# https://github.ocm/suyogprasai/archins
+
+# setting up time and locale
 time_and_locale(){
 
     ln -sf /usr/share/zoneinfo/$TIMEZONE  /etc/localtime # Sets local time
@@ -11,6 +17,8 @@ time_and_locale(){
 
 time_and_locale
 
+
+# Setting up hostname and network stuff
 set_hostname() {
     hostname=$NAME_OF_MACHINE
     echo ${hostname} >> /etc/hostname
@@ -19,8 +27,9 @@ set_hostname() {
 
 set_hostname
 
-echo -e "$ROOT_PASSWORD\n$ROOT_PASSWORD" | passwd
 useradd -m $USERNAME
+echo -e "root:$ROOT_PASSWORD" | chpasswd
+echo -e "$USERNAME:$PASSWORD" | chpasswd
 echo $PASSWORD | passwd $USERNAME
 usermod -aG wheel,audio,video,optical,storage $USERNAME
 
@@ -41,10 +50,12 @@ grub_config() {
     grub-mkconfig -o /boot/grub/grub.cfg
 }
 
+grub_config
+
 network_config() {
 
     do_install "networkmanager"
     systemctl enable NetworkManager
 }
 
-exit
+network_config
