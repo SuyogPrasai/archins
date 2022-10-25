@@ -135,7 +135,7 @@ timezone() {
 
     options=(Yes No)
     select_option "System detected your timezone to be $time_zone. \nIs this correct?" "${options[@]}"
-    case $ans in
+    case ${options[$ans]} in
         Y|y)
             echo "$time_zone set as timezone."
             set_option TIMEZONE $time_zone;;
