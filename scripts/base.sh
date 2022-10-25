@@ -9,7 +9,7 @@
 # Sourcing commonrc
 clear
 source $SCRIPTS_DIR/utils/commonrc
-source $CONFIG
+source $CONFIG_DIR/setup.conf
 logo
 
 # loading keympap
@@ -44,12 +44,12 @@ auto_partition() {
 
     partition_now # Create partitions
 
-    if  [ "${SSD}" == "TRUE" ]; then
-        partition1=${DISK}p1
-        partition2=${DISK}p2
+    if  [[ "${SSD}" == "TRUE" ]]; then
+        export partition1=${DISK}p1
+        export partition2=${DISK}p2
     else
-        parition1=${DISK}1
-        parition2=${DISK}2
+        export partition1=${DISK}1
+        export partition2=${DISK}2
     fi
 
     echo $partition1
@@ -58,4 +58,4 @@ auto_partition() {
 
 }
 
-auto_partition
+auto_partition # Automatically creates partition
