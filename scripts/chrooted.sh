@@ -32,9 +32,8 @@ set_hostname() {
 set_hostname
 
 useradd -m $USERNAME
-echo -e "root:$ROOT_PASSWORD" | chpasswd
-echo -e "$USERNAME:$PASSWORD" | chpasswd
-echo $PASSWORD | passwd $USERNAME
+echo "root:$ROOT_PASSWORD" | chpasswd
+echo "$USERNAME:$PASSWORD" | chpasswd
 usermod -aG wheel,audio,video,optical,storage $USERNAME
 
 sudo_config() {
@@ -48,7 +47,7 @@ sudo_config
 
 grub_config() {
 
-    do_install "grub efibootmgr dosfstools os-prober mtools"
+    do_install grub efibootmgr dosfstools os-prober mtools
 
     grub-install --target=x86_64-efi  --bootloader-id=grub_uefi --recheck
     grub-mkconfig -o /boot/grub/grub.cfg

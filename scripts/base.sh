@@ -156,5 +156,6 @@ info_msg "partitions successfully made"
  }
 
 linux_swap
-arch-chroot /mnt
 cecho "The live cd part is now concluded and execute the other scripts located /mnt/root/archins" $yellow
+read -p "\nPress any key to continue...."
+arch-chroot /mnt
