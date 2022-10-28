@@ -23,6 +23,7 @@ time_and_locale(){
 time_and_locale
 
 do_install sudo wget libnewt
+
 # Setting up hostname and network stuff
 set_hostname() {
     hostname=$NAME_OF_MACHINE
@@ -33,12 +34,18 @@ set_hostname() {
 
 set_hostname
 
+# Setting up users
 useradd -m $USERNAME
-echo "root:$ROOT_PASSWORD" | chpasswd
-echo "$USERNAME:$PASSWORD" | chpasswd
+info_msg "Added user $USERNAME"
+
+echo "root:$ROOT_PASSWORD" | chpasswd # Setting up ROOT password
+info_msg "Password for ROOT is set"
+echo "$USERNAME:$PASSWORD" | chpasswd # Setting up user password
+info_msg "Password for $USERNAME is set"
+
 usermod -aG wheel,audio,video,optical,storage $USERNAME
 
-sudo_config() {
+sudo_config() { # Setting up sudoers file
 
     sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
     sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
@@ -63,14 +70,16 @@ grub_config() {
 
     grub-install --target=x86_64-efi  --bootloader-id=grub_uefi --efi-directory=/boot/EFI --recheck
     grub-mkconfig -o /boot/grub/grub.cfg
+
+    info_msg "Grub installed on the system"
 }
 
-grub_config
+grub_config # Setting up grub in the system
 
-network_config() {
+network_config() { # Network configuration
 
-    do_install "networkmanager"
-    systemctl enable NetworkManager
+    do_install "networkmanager" # Installing NetworkManager
+    systemctl enable NetworkManager # Enabling NetworkManager in system
 }
 
 network_config

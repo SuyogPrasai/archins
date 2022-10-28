@@ -27,7 +27,10 @@ COMMONRC=$COMMONRC
 
 # NOTE sourcing commonrc
 source $COMMONRC
-mkdir $LOGS_DIR
+if [ ! -d $LOGS_DIR ]; then
+    mkdir $LOGS_DIR
+fi
+
 arch_run() {
     cat <<EOF
 which part are you in?
@@ -41,7 +44,7 @@ EOF
 
         2) # Since we are changing the script directory path variables must be reset
              ( bash $HOME/archins/scripts/chrooted.sh ) |& tee $LOGS_DIR/chrooted.log;;
-           # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
+        # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
 
     esac
 
