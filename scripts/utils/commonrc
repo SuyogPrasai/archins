@@ -104,51 +104,11 @@ check_input() {
     [[ -n $2 ]] && read $2 <<< $ans
 }
 
-put_suspend() {
-    cecho "
-Type Ctrl+C to exit
-or type any key to continue" $cyan
-    read whatever
-}
 
 # -----------------------------------------------------------------------------
 # basic
 # -----------------------------------------------------------------------------
 
-enable_multilib() {
-    sudo cat >>/etc/pacman.conf << EOF
-[multilib]
-Include = /etc/pacman.d/mirrorlist
-EOF
-}
-
-check_multilib_support() {
-    echo 'Check multilib support ...'
-    if [[ -z "grep '^\[multilib\]' $pacman_conf" ]]; then
-        multilib_enabled=0
-        echo "Add multilib repo support? (Y/n)"
-        check_input yn
-        [[ $ans = 'y' ]] && enable_multilib && multilib_enabled=1
-        sudo pacman -Sy
-    else
-        multilib_enabled=1
-    fi
-
-    (( multilib_enabled == 0 )) && enable_multilib
-    echo "Support multilib: $multilib_enabled"
-}
-
-# -----------------------------------------------------------------------------
-# basic
-# -----------------------------------------------------------------------------
-
-# $1 expr that will be passed to bc
-# return 0 if nothing's wrong
-valid_by_bc() {
-    local res
-    res=$(bc <<< "$1")
-    (( res == 1 )) || return 255
-}
 
 logo(){
     put_cutoff

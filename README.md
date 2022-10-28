@@ -27,7 +27,7 @@ chmod +x install.sh
 ./install.sh
 ```
 
-###### You will be given a prompt to select the section of the script. If so please select the first part (livecd part).
+#### You will be given a prompt to select the section of the script. If so please select the first part (livecd part).
 
 
 ## After the first part (livecd part) in the script you will be asked to execute the script again
@@ -40,7 +40,7 @@ cd archins
 ./install.sh
 ```
 
-###### Select the second option (chrooted part) after this and you are good to go .
+#### Select the second option (chrooted part) after this and you are good to go .
 
 ## System Description
 This script completely installs arch linux in your system. It includes prompts to select your desired desktop environment, window manager, AUR helper, and whether to do a full or minimal install. 
