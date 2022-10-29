@@ -50,7 +50,7 @@ sudo_config() { # Setting up sudoers file
     sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
     sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
 
-    info_msg "writeen in sudoers file"
+    info_msg "Sudoers file configured"
 }
 
 sudo_config
@@ -73,6 +73,9 @@ grub_config() {
 
     info_msg "Grub installed on the system"
 }
+
+# Setting multilib
+sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 
 grub_config # Setting up grub in the system
 

@@ -14,6 +14,7 @@ export CONFIGS_DIR=$SCRIPT_DIR/configs
 export PKG_LISTS_DIR=$SCRIPT_DIR/pkglists
 export LOGS_DIR=$SCRIPT_DIR/logs
 export COMMONRC=$SCRIPTS_DIR/utils/commonrc
+export CONFIG=$CONFIGS_DIR/setup.conf
 
 echo  "
 VARIABLE INFORMATION:
@@ -23,6 +24,7 @@ CONFIGS_DIR=$CONFIGS_DIR
 PKG_LISTS_DIR=$PKG_LISTS_DIR
 LOGS_DIR=$LOGS_DIR
 COMMONRC=$COMMONRC
+CONFIG=$CONFIG
 "
 
 # NOTE sourcing commonrc
@@ -40,12 +42,25 @@ EOF
     check_input 12
     case $ans in
         1) ( bash $SCRIPTS_DIR/setup.sh ) |& tee $LOGS_DIR/setup.sh
-           ( bash $SCRIPTS_DIR/base.sh ) |& tee $LOGS_DIR/base.log;;
+           ( bash $SCRIPTS_DIR/base.sh ) |& tee $LOGS_DIR/base.log
+
+           ;;
 
         2) # Since we are changing the script directory path variables must be reset
-             ( bash $HOME/archins/scripts/chrooted.sh ) |& tee $LOGS_DIR/chrooted.log;;
-        # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
+             source $CONFIG
+             ( bash $HOME/archins/scripts/chrooted.sh ) |& tee $LOGS_DIR/chrooted.log
 
+             if [[ $INSTALL_TYPE == "MINIMAL" ]]; then
+
+                 shutdown now
+
+             else [[ $INSTALL_TYPE == "FULL" ]]
+                  ( bash $SCIRIPTS_DIR/pkg_install.sh ) |& tee $LOGS_DIR/pkg_install.sh
+                  { bash $SCRIPTS_DIR/configuration.sh } |& tee $LOGS_DIR/configuration.sh
+
+                  # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
+             fi
+             ;;
     esac
 
 }
