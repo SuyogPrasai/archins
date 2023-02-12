@@ -27,7 +27,7 @@ COMMONRC=$COMMONRC
 CONFIG=$CONFIG
 "
 
-# NOTE sourcing commonrc
+# NOTE sourcing commonrc [Our config file]
 source $COMMONRC
 if [ ! -d $LOGS_DIR ]; then
     mkdir $LOGS_DIR
