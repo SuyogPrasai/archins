@@ -61,7 +61,7 @@ EOF
                   # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
             fi
 
-             ;;
+            ;;
     esac
 
 }
