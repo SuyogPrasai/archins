@@ -59,7 +59,8 @@ EOF
                   { bash $SCRIPTS_DIR/configuration.sh } |& tee $LOGS_DIR/configuration.sh
 
                   # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
-             fi
+            fi
+
              ;;
     esac
 
