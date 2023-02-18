@@ -199,7 +199,7 @@ diskpart() {
 # Sets AUR helper
 aurhelper() {
     options=(paru yay picaur aura trizen pacaur none)
-    select_option "Please enter your desired Desktop Environment"  "${options[@]}"
+    select_option "Please enter your desired AUR helper"  "${options[@]}"
     aur_helper=${options[$ans]}
     info_msg "$aur_helper selected as the aur_helper"
     set_option AUR_HELPER $aur_helper

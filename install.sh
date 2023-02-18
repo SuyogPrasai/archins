@@ -1,9 +1,9 @@
 #! /usr/bin/env bash
-#
+
 # https://github.com/suyogprasai/archins
 # GITHUB: https://github.com/suyogprasai
 # @suyogprasai
-#
+
 # This my custom arch linux installation script.
 
 # NOTE Initializing script path variables
