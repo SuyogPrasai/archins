@@ -61,7 +61,7 @@ sudo_config
  info_msg "Created /mnt/boot/EFI"
  mount ${partition1} /boot/EFI
  info_msg "mounted $partition1 to /mnt/boot"
- pacman -Sy
+
 
 
 grub_config() {
@@ -77,6 +77,7 @@ grub_config() {
 
 # Setting multilib
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
+pacman -Sy --noconfirm --needed
 
 grub_config # Setting up grub in the system
 
