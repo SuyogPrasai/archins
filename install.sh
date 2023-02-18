@@ -34,7 +34,7 @@ if [ ! -d $LOGS_DIR ]; then
 fi
 
 arch_run() {
-    cat <<EOF
+    cat << EOF
 which part are you in?
 1> livecd part
 2> chrooted part
@@ -50,13 +50,15 @@ EOF
              source $CONFIG
              ( bash $HOME/archins/scripts/chrooted.sh ) |& tee $LOGS_DIR/chrooted.log
 
-             if [[ $INSTALL_TYPE == "MINIMAL" ]]; then
+             if [[ $INSTALL_TYPE == "MINIMAL" ]]; 
+             
+             then
 
                  shutdown now
 
              else [[ $INSTALL_TYPE == "FULL" ]]
                   ( bash $SCIRIPTS_DIR/pkg_install.sh ) |& tee $LOGS_DIR/pkg_install.sh
-                  { bash $SCRIPTS_DIR/configuration.sh } |& tee $LOGS_DIR/configuration.sh
+                  ( bash $SCRIPTS_DIR/configuration.sh ) |& tee $LOGS_DIR/configuration.sh
 
                   # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
             fi
