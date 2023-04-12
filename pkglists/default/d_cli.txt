@@ -1,0 +1,4 @@
+# Set of programs and software to be installed in a cli based system [Installed in every installation]
+
+vim
+git
