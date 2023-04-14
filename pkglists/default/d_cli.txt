@@ -9,4 +9,4 @@ cmatrix
 base-devel
 git
 dmenu
-
+rsync

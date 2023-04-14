@@ -5,7 +5,6 @@
 # https://github.ocm/suyogprasai/archins
 # Script for installing all the required packages in arch linux 
 
-
 declare -a pkgs # Array declaration for installing packages
 
 pkg_dir=$PKG_LISTS_DIR
