@@ -131,7 +131,6 @@ pacman_optimize() {
 
     iso=$(curl -4 ifconfig.co/country-iso)
     pacman -Syy
-    cecho   "Arch linux keyring successfully updated" $blue
     local pkgs=("pacman-contrib" "reflector")
     do_install "${pkgs[@]}"
 
