@@ -54,8 +54,8 @@ EOF
             if [[ ${INSTALL_TYPE} == "MINIMAL" ]]; then
                 shutdown now
             elif [[ ${INSTALL_TYPE} == "FULL" ]]; then
-                (su -c "${USERNAME} (bash ${SCRIPTS_DIR}/pkg_install.sh |& tee ${LOGS_DIR}/pkg_install.sh)")
-                (su -c "${USERNAME} (bash ${SCRIPTS_DIR}/configuration.sh |& tee ${LOGS_DIR}/configuration.sh)")
+                (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/pkg_install.sh |& tee ${LOGS_DIR}/pkg_install.sh)")
+                (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee ${LOGS_DIR}/configuration.sh)")
                 # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee ${LOGS_DIR}/user.sh
             fi
             ;;
