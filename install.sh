@@ -40,7 +40,7 @@ Which part are you in?
 2> Chrooted part
 EOF
 
-    check_input 1 2
+    check_input 12
     case $ans in
         1)
             ( bash "${SCRIPTS_DIR}/setup.sh" ) |& tee "${LOGS_DIR}/setup.sh"
