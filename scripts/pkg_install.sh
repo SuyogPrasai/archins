@@ -1,10 +1,12 @@
 #! /usr/bin/env bash
 
+# @suyogprasai
+# https://github.com/suyogprasai/
+# https://github.ocm/suyogprasai/archins
+# Script for installing all the required packages in arch linux 
+
+
 declare -a pkgs # Array declaration for installing packages
-
-PKG_LISTS_DIR=../pkglists
-INSTALL_TYPE=FULL
-
 
 pkg_dir=$PKG_LISTS_DIR
 default=${PKG_LISTS_DIR}/default
