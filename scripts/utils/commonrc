@@ -131,7 +131,6 @@ pacman_optimize() {
 
     iso=$(curl -4 ifconfig.co/country-iso)
     pacman -Syy
-    pacman -S --noconfirm archlinux-keyring # Separately installing archlinux-keyring as doing it with other packages gave errors
     cecho   "Arch linux keyring successfully updated" $blue
     local pkgs=("pacman-contrib" "reflector")
     do_install "${pkgs[@]}"
