@@ -58,7 +58,7 @@ EOF
 
              else [[ $INSTALL_TYPE == "FULL" ]]
              
-                  (su ${USERNAME} -c  "((bash $SCIRIPTS_DIR/pkg_install.sh ) |& tee $LOGS_DIR/pkg_install.sh)"
+                  (su ${USERNAME} -c  "((bash $SCRIPTS_DIR/pkg_install.sh ) |& tee $LOGS_DIR/pkg_install.sh)"
                   (su ${USERNAME} -c  "((bash $SCRIPTS_DIR/configuration.sh ) |& tee $LOGS_DIR/configuration.sh)"
 
                   # ( bash $SCRIPTS_DIR/user.sh ) |& tee $LOGS_DIR/user.sh
