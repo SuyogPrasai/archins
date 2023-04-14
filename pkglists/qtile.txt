@@ -1,0 +1,3 @@
+# Programs required for qtile window 
+
+qtile

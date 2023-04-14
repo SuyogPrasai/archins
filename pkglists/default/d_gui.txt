@@ -1,2 +1,11 @@
 # Set of programs to be installed in gui installs [Optional]
 
+xorg
+lxdm
+chromium
+brave
+kitty
+alacritty
+pipewire
+pipewire-pulse
+vlc
