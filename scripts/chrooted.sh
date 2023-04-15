@@ -133,7 +133,7 @@ if [ $(whoami) = "root"  ]; then
 
 	cp -R $HOME/archins /home/$USERNAME/
     chown -R $USERNAME: /home/$USERNAME/archins
-    echo "archins copied to home directory"
+    info_msg "archins copied to home directory"
     
 else
 	echo "You are already a user proceed with aur installs"

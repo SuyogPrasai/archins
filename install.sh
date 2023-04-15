@@ -14,7 +14,7 @@ export CONFIGS_DIR=${SCRIPT_DIR}/configs
 export PKG_LISTS_DIR=${SCRIPT_DIR}/pkglists
 export LOGS_DIR=${SCRIPT_DIR}/logs
 export COMMONRC=${SCRIPTS_DIR}/utils/commonrc
-export CONFIG=${CONFIGS_DIR}/setup.conf
+export CONFIG_FILE=${CONFIGS_DIR}/setup.conf
 
 echo "
 VARIABLE INFORMATION:
@@ -24,7 +24,7 @@ CONFIGS_DIR=${CONFIGS_DIR}
 PKG_LISTS_DIR=${PKG_LISTS_DIR}
 LOGS_DIR=${LOGS_DIR}
 COMMONRC=${COMMONRC}
-CONFIG=${CONFIG}
+CONFIG=${CONFIG_FILE}
 "
 
 # NOTE sourcing commonrc [Our config file]
