@@ -33,6 +33,8 @@ if [ ! -d "${LOGS_DIR}" ]; then
     mkdir "${LOGS_DIR}"
 fi
 
+chmod +x ${SCRIPTS_DIR}/*.sh # So that we can directly execute a script later
+
 arch_run() {
 
     (bash "${SCRIPTS_DIR}/setup.sh") |& tee "${LOGS_DIR}/setup.sh"
