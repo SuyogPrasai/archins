@@ -34,36 +34,18 @@ if [ ! -d "${LOGS_DIR}" ]; then
 fi
 
 arch_run() {
-    cat << EOF
-Which part are you in?
-1> Live CD part
-2> Chrooted part
-EOF
 
-    check_input 12
-    case $ans in
-        1)
-            ( bash "${SCRIPTS_DIR}/setup.sh" ) |& tee "${LOGS_DIR}/setup.sh"
-            ( bash "${SCRIPTS_DIR}/base.sh" ) |& tee "${LOGS_DIR}/base.log"
-            ;;
-        2)
-            # Since we are changing the script directory, path variables must be reset
-            source "${CONFIG}"
-            ( bash "${HOME}/archins/scripts/chrooted.sh" ) |& tee "${LOGS_DIR}/chrooted.log"
+    (bash "${SCRIPTS_DIR}/setup.sh") |& tee "${LOGS_DIR}/setup.sh"
+    (bash "${SCRIPTS_DIR}/base.sh") |& tee "${LOGS_DIR}/base.log"
+    (arch-chroot /mnt ${HOME}/archins/scripts/chrooted.sh) |& tee "${LOGS_DIR}/chrooted.log"
 
-            if [[ ${INSTALL_TYPE} == "MINIMAL" ]]; then
-                shutdown now
-            elif [[ ${INSTALL_TYPE} == "FULL" ]]; then
-                (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/pkg_install.sh |& tee ${LOGS_DIR}/pkg_install.sh)")
-                (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee ${LOGS_DIR}/configuration.sh)")
-                # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee ${LOGS_DIR}/user.sh
-            fi
-            ;;
-        *)
-            echo "Invalid option selected. Exiting."
-            exit 1
-            ;;
-    esac
+    # if [[ ${INSTALL_TYPE} == "MINIMAL" ]]; then
+    #     shutdown now
+    # elif [[ ${INSTALL_TYPE} == "FULL" ]]; then
+    #     (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/pkg_install.sh |& tee ${LOGS_DIR}/pkg_install.sh)")
+    #     (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee ${LOGS_DIR}/configuration.sh)")
+    #     # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee ${LOGS_DIR}/user.sh
+    # fi
 }
 
 # NOTE main script running function

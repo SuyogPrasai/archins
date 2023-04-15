@@ -18,7 +18,7 @@ cut_off="-----------------------------------------------------------------------
 # $2: color
 cecho() {
     echo -e "${2:-${bold}}${1}"
-    tput sgr0                        # Reset to normal.
+    tput sgr0 # Reset to normal.
 }
 
 put_error() {
@@ -68,9 +68,9 @@ select_option() {
     local msg=$1 && shift
     local tmp_array=($@)
     local length=${#tmp_array[@]}
-    local sequence=$(seq -s " " 00 $length )
+    local sequence=$(seq -s " " 00 $length)
     cecho "$msg :"
-    for (( i=0; i<$length; i++ )); do
+    for ((i = 0; i < $length; i++)); do
         echo "$i>    ${tmp_array[$i]}"
     done
     check_input "$sequence" ans
@@ -80,7 +80,6 @@ select_option() {
 # Display an array as options
 # $1 array
 # reutrns the index of the item selected by the user
-
 
 # enhanced `read` - name a range for checking
 # $1 input range, e.g. 123 Yn abcd (case insensitive)
@@ -93,7 +92,7 @@ check_input() {
     while [[ $is_valid = 'no' ]]; do
         read -p "Input: " ans
         [[ -z "$ans" ]] && ans=$_default
-        ans=`echo $ans | tr '[A-Z]' '[a-z]'`
+        ans=$(echo $ans | tr '[A-Z]' '[a-z]')
         if [[ "$_range" = *$ans* ]]; then
             is_valid=yes
         else
@@ -101,16 +100,14 @@ check_input() {
         fi
     done
 
-    [[ -n $2 ]] && read $2 <<< $ans
+    [[ -n $2 ]] && read $2 <<<$ans
 }
-
 
 # -----------------------------------------------------------------------------
 # basic
 # -----------------------------------------------------------------------------
 
-
-logo(){
+logo() {
     put_cutoff
     cecho "
    ▄████████    ▄████████  ▄████████    ▄█    █▄     ▄█  ███▄▄▄▄      ▄████████

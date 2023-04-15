@@ -153,8 +153,3 @@ linux_swap() {
 }
 
 linux_swap
-cecho "The live cd part is now concluded and execute the other scripts located /mnt/root/archins" $yellow
-echo
-read -p "Press any key to continue...."
-echo
-arch-chroot /mnt
