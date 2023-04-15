@@ -8,8 +8,8 @@
 
 clear
 # Sourcing commonrc
-source $SCRIPTS_DIR/utils/commonrc
-source $CONFIGS_DIR/setup.conf
+source ${SCRIPTS_DIR}/utils/commonrc
+source ${CONFIG_FILE}
 logo
 
 
