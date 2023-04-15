@@ -270,15 +270,15 @@ if [ -f ${CONFIG} ]; then
     echo
     answer=(Yes No)
     select_option "Do you want to use this file for the installation? [${CONFIG}]?" "${answer[@]}"
-    case ${answer[$ans]} in
+    case "${answer[$ans]}" in
         Yes)
             background_checks # Does some background checks
             clear
             pkg_setup      # Sets up pkgs required for the install
             display_config # Finally displays the config that is generated
             ;;
-            
-        NO)
+
+        No)
             background_checks # Does some background checks
             clear
             pkg_setup      # Sets up pkgs required for the install
@@ -293,5 +293,8 @@ if [ -f ${CONFIG} ]; then
             installType    # Sets the install type
             display_config # Finally displays the config that is generated
             ;;
+        *)
+            echo "Invalid option: ${answer[$ans]}"
+            ;;            
     esac
 fi
