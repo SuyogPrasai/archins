@@ -12,7 +12,7 @@ source $COMMONRC
 # Setup and generate the configuration file
 CONFIG_FILE=$CONFIGS_DIR/setup.conf
 if [ ! -f $CONFIG_FILE ]; then # check if file exists or not
-    touch -f $CONFIG_FILE      # create file if it does not exist
+    touch -a $CONFIG_FILE      # create file if it does not exist
 fi
 
 set_option() {
