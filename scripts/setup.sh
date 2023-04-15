@@ -228,11 +228,13 @@ installType() {
 fonts_setup() {
     do_install "terminus-font" &>/dev/null
     setfont ter-v22b
+    info "Font is set"
 }
 
 # Installs latest archlinux keyring as it prevents errors in installing latest packages
 archlinux_keyring_setup() {
     pacman -S --noconfirm archlinux-keyring &>/dev/null
+    info "Keyring updated"
 
 }
 
@@ -269,28 +271,28 @@ if [ -f ${CONFIG} ]; then
     options=(Yes No)
     select_option "Do you want to use this file for the installation? [${CONFIG}]?" "${options[@]}"
     case ${optons[$ans]} in
-    Yes)
-        background_checks # Does some background checks
-        clear
-        pkg_setup      # Sets up pkgs required for the install
-        display_config # Finally displays the config that is generated
-        ;;
+        Yes)
+            background_checks # Does some background checks
+            clear
+            pkg_setup      # Sets up pkgs required for the install
+            display_config # Finally displays the config that is generated
+            ;;
 
     
         NO)
-        background_checks # Does some background checks
-        clear
-        pkg_setup      # Sets up pkgs required for the install
-        logo           # Sets up logo of the script
-        userinfo       # Asks for user information
-        filesystem     # Asks for the fs the user wants
-        timezone       # Sets the timezone of the user
-        keymap         # Sets the keympa of the user
-        diskpart       # Selects the required disk for the partitio
-        aurhelper      # Sets the aur helper
-        desktopenv     # Sets the desktop environment
-        installType    # Sets the install type
-        display_config # Finally displays the config that is generated
-        ;;
+            background_checks # Does some background checks
+            clear
+            pkg_setup      # Sets up pkgs required for the install
+            logo           # Sets up logo of the script
+            userinfo       # Asks for user information
+            filesystem     # Asks for the fs the user wants
+            timezone       # Sets the timezone of the user
+            keymap         # Sets the keympa of the user
+            diskpart       # Selects the required disk for the partitio
+            aurhelper      # Sets the aur helper
+            desktopenv     # Sets the desktop environment
+            installType    # Sets the install type
+            display_config # Finally displays the config that is generated
+            ;;
     esac
 fi
