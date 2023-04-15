@@ -51,10 +51,3 @@ do
 done < ${final_pkg}
 
 do_install "${pkgs[@]}"
-
-
-
-
-
-
-
