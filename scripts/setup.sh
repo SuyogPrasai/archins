@@ -268,17 +268,16 @@ if [ -f ${CONFIG} ]; then
     echo "There's already a config file in the directory"
     cat ${CONFIG}
     echo
-    options=(Yes No)
-    select_option "Do you want to use this file for the installation? [${CONFIG}]?" "${options[@]}"
-    case ${optons[$ans]} in
+    answer=(Yes No)
+    select_option "Do you want to use this file for the installation? [${CONFIG}]?" "${answer[@]}"
+    case ${answer[$ans]} in
         Yes)
             background_checks # Does some background checks
             clear
             pkg_setup      # Sets up pkgs required for the install
             display_config # Finally displays the config that is generated
             ;;
-
-    
+            
         NO)
             background_checks # Does some background checks
             clear
