@@ -6,15 +6,18 @@
 # Script for setting up the configuration file for installing arch linux
 # file: setup.sh
 
-# Source other function files
+## Source other function files
 source $COMMONRC
 
-# Setup and generate the configuration file
+## Setup and generate the configuration file
 CONFIG_FILE=$CONFIGS_DIR/setup.conf
 if [ ! -f $CONFIG_FILE ]; then # check if file exists or not
     touch -a $CONFIG_FILE      # create file if it does not exist
 fi
 
+## Function of setting option
+## $1 ==> option name
+## $2 ==> value name
 set_option() {
     if grep -Eq "^${1}.*" $CONFIG_FILE; then # check if option exists
         sed -i -e "/^${1}.*/d" $CONFIG_FILE  # delete option if exists
@@ -22,8 +25,10 @@ set_option() {
     echo "${1}=${2}" >>$CONFIG_FILE # add option
 }
 
+## Function of setting password for a given user
+## $1 ==> option to be printed in the user 
+## $2 ==> option to be echoed to the config file
 set_password() {
-
     put_cutoff
     echo
     cecho "Password for $2: " $yellow
@@ -42,34 +47,32 @@ set_password() {
 
 }
 
-# NOTE some bakground checks to see if the script is compatible with the system or not
-
+## Some bakground checks to see if the script is compatible with the system or not
 UEFI_check() {
     # Verify the boot mode
-
     if [[ -d /sys/firmware/efi/efivars ]]; then
         cecho "UEFI mode is enabled on an UEFI motherboard" $cyan
     else
         put_error "Sorry, this script only support UEFI mode for now"
         exit 1
     fi
-
 }
 
+## Checking root check if the script is not run as root
 root_check() {
     if [[ "$(id -u)" != "0" ]]; then
         put_error "This script must be run under the 'root' user!\n"
         exit 0
     fi
 }
-
+## Checking if the distro is arch linux or not
 arch_check() {
     if [[ ! -e /etc/arch-release ]]; then
         put_error "This script must be run in Arch Linux!\n"
         exit 0
     fi
 }
-
+## Checks Pacman ( package manager ) is working properly
 pacman_check() {
     if [[ -f /var/lib/pacman/db.lck ]]; then
         put_error "Pacman is blocked."
@@ -77,60 +80,54 @@ pacman_check() {
         exit 0
     fi
 }
-
+## Checks the internet
 internet_check() {
-
     ping -c 5 archlinux.org 2>&1 >/dev/null
     if [[ $? == 1 ]]; then
         put_error "No internet connection"
         put_error "Check your internet"
         exit 0
     fi
-
 }
 
-# Does some background checks
+## Does some background checks
 background_checks() {
-    # UEFI_check
+    UEFI_check
     root_check
     arch_check
     pacman_check
     internet_check
 }
 
-# NOTE Gather username and password to be used for installation
+## NOTE Gather username and password to be used for installation
 userinfo() {
-    echo
-    put_cutoff
+    echo # Formating
+    put_cutoff # Formating
     read -p "Please enter your username: " username
     set_option USERNAME ${username,,}
     set_password "PASSWORD" ${username,,}
     set_password "ROOT_PASSWORD" "ROOT"
     read -rep "Please enter your hostname: " nameofmachine
-    set_option NAME_OF_MACHINE "$nameofmachine"
+    set_option NAME_OF_MACHINE "${nameofmachine}"
 
 }
 
-# Selects the filesystem for the user
+## Selects the filesystem for the user
 filesystem() {
-
-    options=("ext4" "btrfs" "exit")
-    select_option "Select a filesystem from the following" "${options[@]}"
-    case $ans in
-    0) set_option FS ext4 ;;
+    options=( "btrfs" "ext4" ) # File systems supported
+    select_option "Select a filesystem from the following" "${options[@]}" 
+    case $ans in # Case statement for setting right filesystem
+    0) set_option FS ext4 ;; 
     1) set_option FS btrfs ;;
-    2) exit ;;
     esac
     local FS=${options[$ans]}
     info_msg "$FS selected as Filesystem"
 }
 
-# Sets timezone for the user
+## Sets timezone for the user
 timezone() {
-
     time_zone="$(curl --fail -s https://ipapi.co/timezone)"
-
-    options=(Yes No)
+    options=( "Yes" "No" )
     select_option "System detected your timezone to be $time_zone. \nIs this correct?" "${options[@]}"
     case ${options[$ans]} in
     Yes)
@@ -145,20 +142,19 @@ timezone() {
     esac
 }
 
-# Sets keymap for the user
+## Sets keymap for the user
 keymap() {
     options=(us by ca cf cz de dk es et fa fi fr gr hu il it lt lv mk nl no pl ro ru sg ua uk)
     select_option "Please select a key board layout from this list" "${options[@]}"
-    keymap=${options[$ans]}
+    keymap=${options[${ans}]}
     info_msg "Your key board layout is set as: $keymap"
     set_option KEYMAP $keymap
-
 }
 
-# Selects the disk to install the system in
+## Selects the disk to install the system in
 drivessd() {
-    options=(Yes No)
-    select_option "Is this an ssd?" "${options[@]}"
+    options=("Yes" "No")
+    select_option "Is this an ssd?" "${options[@]}" # Asks if the device is an ssd or not
     option=${options[$ans]}
     case $option in
     Yes)
@@ -174,9 +170,8 @@ drivessd() {
     esac
 }
 
-# NOTE Disk selection for drive to be used with installtion
+## NOTE Disk selection for drive to be used with installtion
 diskpart() {
-
     warn "
 ------------------------------------------------------------------------
     THIS WILL FORMAT AND DELETE ALL DATA ON THE DISK
@@ -189,33 +184,35 @@ diskpart() {
     disk=${options[$ans]%|*}
     info_msg "${disk%|*} is selected"
     set_option DISK ${disk%|*}
-
+    
     drivessd
 }
 
-# Sets AUR helper
+## Sets AUR helper
 aurhelper() {
-    options=(paru yay picaur aura trizen pacaur none)
+    options=(paru yay picaur aura trizen pacaur none) # All of  aur helpers that are supported
     select_option "Please enter your desired AUR helper" "${options[@]}"
     aur_helper=${options[$ans]}
     info_msg "$aur_helper selected as the aur_helper"
     set_option AUR_HELPER $aur_helper
 }
 
-# Sets desktop environment
+## Sets desktop environment
 desktopenv() {
-
-    options=($(for f in pkglists/*.txt; do echo "$f" | sed -r "s/.+\/(.+)\..+/\1/;/pkgs/d"; done))
+    options=($(for f in pkglists/*.txt; do echo "$f" | sed -r "s/.+\/(.+)\..+/\1/;/pkgs/d"; done)) # Gets the names of files in pkglists
     select_option "Please select your desired Desktop Environment" "${options[@]}"
     desktop_env=${options[$ans]}
     info_msg "$desktop_env selected as desktop environment"
     set_option DESKTOP_ENV $desktop_env
 }
 
-# Sets installation type
+## Sets installation type
+## There are two different types of installation types supporte 
+## FULL ==> installs all the components including my dotfiles and cutomizations
+## MINIMAL ==> installs only base arch package
 installType() {
-    options=(FULL MINIMAL)
-    echo
+    options=(FULL MINIMAL) 
+    echo # Formating
     warn "Full install: Installs full featured desktop enviroment, with added apps \nand themes needed for everyday use\nMinimal Install: Installs only apps few selected apps to get you started"
     select_option "Please select type of installation" "${options[@]}"
     install_type=${options[$ans]}
@@ -224,53 +221,59 @@ installType() {
 
 }
 
-# Sets font for tui as the default one sucks
-fonts_setup() {
-    do_install "terminus-font" &>/dev/null
-    setfont ter-v22b
-    info_msg "Font is set"
-}
+# This feature brings alot of delay in the script
+# ## Sets font for tui as the default one sucks
+# fonts_setup() {
+#     do_install "terminus-font" &>/dev/null
+#     setfont ter-v22b
+#     info_msg "Font is set"
+# }
 
-# Installs latest archlinux keyring as it prevents errors in installing latest packages
+## Installs latest archlinux keyring as it prevents errors in installing latest packages
+## This is important as without this packages cannot be installed in the system
 archlinux_keyring_setup() {
     pacman -S --noconfirm archlinux-keyring &>/dev/null
     info_msg "Keyring updated"
-
 }
 
+
+## Installs packages required for the scripts
 pkg_setup() {
-    pacman -Syu &> /dev/null
+    pacman -Syu
     archlinux_keyring_setup
-    fonts_setup
+    # fonts_setup
 }
 
+## Displays the configuaration file that was generated 
+## Also asks for confirmation if the config is right
 display_config() { # Displays the configuration file generated by the system
-    options=(Yes No)
+    options=("Yes" "No")
     cecho "This is the configuration file!" $bold
-    put_cutoff
+    put_cutoff # Formating
     cat ${CONFIG_FILE}
-    put_cutoff
+    put_cutoff # Formating
     select_option "Are you sure you want to continue?" "${options[@]}"
     case ${options[$ans]} in
     Yes)
         echo
         info_msg "Configuration completed!!!!"
         ;;
-
     No)
         exit 1
         ;;
     esac
 }
 
-# NOTE Program function sequence
+## Main Program function sequence 
+## Executes the right functions for installing the arch
+## Also implements the feature of using a config file for installation
 
 if [ -f ${CONFIG_FILE} ]; then
     warn "There's already a config file in the directory"
     echo
     cat ${CONFIG_FILE}
     echo
-    answer=(Yes No)
+    answer=("Yes" "No")
     select_option "Do you want to use this file for the installation? [${CONFIG_FILE}]?" "${answer[@]}"
     case "${answer[$ans]}" in
         Yes)
@@ -279,7 +282,6 @@ if [ -f ${CONFIG_FILE} ]; then
             pkg_setup      # Sets up pkgs required for the install
             display_config # Finally displays the config that is generated
             ;;
-
         No)
             background_checks # Does some background checks
             clear

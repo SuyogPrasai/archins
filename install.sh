@@ -3,10 +3,9 @@
 # https://github.com/suyogprasai/archins
 # GITHUB: https://github.com/suyogprasai
 # @suyogprasai
-
 # This is my custom Arch Linux installation script.
 
-# NOTE Initializing script path variables
+## NOTE Initializing script path variables
 
 export SCRIPT_DIR=$PWD
 export SCRIPTS_DIR=${SCRIPT_DIR}/scripts
@@ -25,9 +24,10 @@ PKG_LISTS_DIR=${PKG_LISTS_DIR}
 LOGS_DIR=${LOGS_DIR}
 COMMONRC=${COMMONRC}
 CONFIG=${CONFIG_FILE}
+
 "
 
-# NOTE sourcing commonrc [Our config file]
+## NOTE sourcing commonrc [Our config file]
 source "$COMMONRC"
 if [ ! -d "${LOGS_DIR}" ]; then
     mkdir "${LOGS_DIR}"
@@ -50,5 +50,5 @@ arch_run() {
     # fi
 }
 
-# NOTE main script running function
+## NOTE main script running function
 arch_run
