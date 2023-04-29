@@ -1,5 +1,7 @@
 #! /usr/bin/env bash
 
+## Color variables used later int the script
+## Used in cecho function
 bold='\033[1m'
 origin='\033[0m'
 black='\E[30;1m'
@@ -11,37 +13,46 @@ magenta='\E[35;1m'
 cyan='\E[36;1m'
 white='\E[37;1m'
 
+
+## Puts a cutt off
 cut_off="------------------------------------------------------------------------"
 
-# Color-echo
-# $1: message
-# $2: color
+## Echoes text with color output
+## $1: message
+## $2: color
 cecho() {
     echo -e "${2:-${bold}}${1}"
     tput sgr0 # Reset to normal.
 }
 
+## Echoes text with red color 
+## Function to print out error
 put_error() {
     cecho "ERROR: $1" $red
 }
 
+## Function to exit the code with message
 exit_with_msg() {
     cecho "$1" $red
     exit 1
 }
 
+## Function to print out debug information
+## Color is set to magenta
 info_msg() {
     echo "########################################################################"
     cecho "INFO: $1" $magenta
     echo "########################################################################"
 }
-
+## Function to print out warning to the user
 warn() {
     cecho "$1" $yellow
 }
 
+## Sets path for the pacman configuration file
 pacman_conf=/etc/pacman.conf
 
+## Function for checking if the user is root
 no_root() {
     if [[ $USER = 'root' ]]; then
         echo "Do not use root."
@@ -49,7 +60,7 @@ no_root() {
     fi
 }
 
-# $1 prompt
+## puts a cuttoff with formatting
 put_cutoff() {
     _line="\n${cut_off}\n"
     cecho $_line $cyan
@@ -59,9 +70,13 @@ put_cutoff() {
     fi
 }
 
+## Installs a set of packages
+## The parameter must be a list where the packages are stored
 do_install() {
     sudo pacman -S --needed --noconfirm "$@"
 }
+
+## function for selecting a option 
 
 select_option() {
     put_cutoff
@@ -70,10 +85,10 @@ select_option() {
     local length=${#tmp_array[@]}
     local sequence=$(seq -s " " 00 $length)
     cecho "$msg :"
-    for ((i = 0; i < $length; i++)); do
-        echo "$i>    ${tmp_array[$i]}"
+    for ((i = 0; i < $length; i++)); do # Used to display each option with index in the tmp_array list
+        echo "$i>    ${tmp_array[$i]}"  # Printing the actual option
     done
-    check_input "$sequence" ans
+    check_input "${sequence}" ans
     put_cutoff
 }
 
@@ -87,12 +102,11 @@ select_option() {
 check_input() {
     local _range=$1
     local is_valid=no
-    local _default=${_range:0:1}
-
+    local _default=${_range:0:1} # Initializes _default with the first character of the _range
     while [[ $is_valid = 'no' ]]; do
         read -p "Input: " ans
-        [[ -z "$ans" ]] && ans=$_default
-        ans=$(echo $ans | tr '[A-Z]' '[a-z]')
+        [[ -z "$ans" ]] && ans=$_default # [[ -z "$ans" ]] checks if the variable is empty
+        ans=$(echo $ans | tr '[A-Z]' '[a-z]') # Converts values of ans variable to lower case
         if [[ "$_range" = *$ans* ]]; then
             is_valid=yes
         else
@@ -100,7 +114,8 @@ check_input() {
         fi
     done
 
-    [[ -n $2 ]] && read $2 <<<$ans
+    [[ -n $2 ]] && read $2 <<<$ans # Here $ans is fed into the read statement the whatever that is stored in $ans gets assigned to variable name that is $2 ## Very useful for automating input and creating varibales within the program
+
 }
 
 # -----------------------------------------------------------------------------
@@ -119,11 +134,10 @@ logo() {
   ███    ███   ███    ███ ███    ███   ███    ███   ███  ███   ███    ▄█    ███
   ███    █▀    ███    ███ ████████▀    ███    █▀    █▀    ▀█   █▀   ▄████████▀
                ███    ███                                                       " $bold
-
     echo
-
 }
 
+## Optimizes pacman for its best performance
 pacman_optimize() {
 
     iso=$(curl -4 ifconfig.co/country-iso)
@@ -134,5 +148,6 @@ pacman_optimize() {
     # Enabling parallel downloads
     sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
     cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.BAK
+    info_msg "Paralell downloads for pacman has been enabled"
     reflector -a 48 -f 5 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
 }
