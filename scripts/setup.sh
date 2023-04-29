@@ -279,8 +279,8 @@ if [ -f ${CONFIG_FILE} ]; then
         Yes)
             background_checks # Does some background checks
             clear
-            pkg_setup      # Sets up pkgs required for the install
             display_config # Finally displays the config that is generated
+            pkg_setup      # Sets up pkgs required for the install
             ;;
         No)
             background_checks # Does some background checks
