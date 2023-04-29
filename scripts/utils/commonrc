@@ -149,5 +149,6 @@ pacman_optimize() {
     sed -i 's/^#ParallelDownloads/ParallelDownloads/' /etc/pacman.conf
     cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist.BAK
     info_msg "Paralell downloads for pacman has been enabled"
-    reflector -a 48 -f 5 -l 20 --sort rate --save /etc/pacman.d/mirrorlist
+    reflector -a 48 -f 5 -l 20 --sort --download-timeout 15 rate --save /etc/pacman.d/mirrorlist
+    info_msg "fastest mirrors has been set"
 }
