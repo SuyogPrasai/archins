@@ -7,7 +7,7 @@
 # file: setup.sh
 
 ## Source other function files
-source $COMMONRC
+source ${COMMONRC}
 
 ## Setup and generate the configuration file
 CONFIG_FILE=$CONFIGS_DIR/setup.conf

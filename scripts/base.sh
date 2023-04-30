@@ -8,6 +8,7 @@
 clear
 ## Sourcing commonrc
 source ${CONFIG_FILE}
+source ${COMMONRC}
 logo
 
 ## optimizing pacman
@@ -150,5 +151,3 @@ linux_swap() {
 }
 
 linux_swap
-
-
