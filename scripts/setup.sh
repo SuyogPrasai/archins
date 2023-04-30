@@ -250,7 +250,7 @@ archlinux_keyring_setup() {
 
 ## Installs packages required for the scripts
 pkg_setup() {
-    pacman -Syu --noconfirm
+
     archlinux_keyring_setup
     # fonts_setup
 }
