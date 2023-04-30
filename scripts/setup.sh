@@ -241,14 +241,14 @@ installType() {
 ## Installs latest archlinux keyring as it prevents errors in installing latest packages
 ## This is important as without this packages cannot be installed in the system
 archlinux_keyring_setup() {
-    pacman -S --noconfirm archlinux-keyring # &>/dev/null
+    pacman -Syy --noconfirm archlinux-keyring # &>/dev/null
     info_msg "Keyring updated"
 }
 
 
 ## Installs packages required for the scripts
 pkg_setup() {
-    pacman -Syu
+    pacman -Syu --noconfirm
     archlinux_keyring_setup
     # fonts_setup
 }
