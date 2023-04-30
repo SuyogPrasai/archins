@@ -5,10 +5,8 @@
 # https://github.ocm/suyogprasai/archins
 # Script for setting up the configuration file for installing arch linux file: base.sh
 
-
 clear
 ## Sourcing commonrc
-source ${SCRIPTS_DIR}/utils/commonrc
 source ${CONFIG_FILE}
 logo
 
