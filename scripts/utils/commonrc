@@ -138,8 +138,9 @@ logo() {
 }
 
 ## Optimizes pacman for its best performance
-pacman_optimize() {  iso=$(curl -4 ifconfig.co/country-iso)
-    pacman -Syy
+pacman_optimize() {  
+    iso=$(curl -4 ifconfig.co/country-iso)
+    pacman -Syy --noconfirm
     local pkgs=("pacman-contrib" "reflector")
     do_install "${pkgs[@]}"
 
