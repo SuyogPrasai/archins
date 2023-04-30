@@ -5,25 +5,23 @@
 # https://github.ocm/suyogprasai/archins
 # Script for setting up the configuration file for installing arch linux file: base.sh
 
-
 clear
-# Sourcing commonrc
-source $SCRIPTS_DIR/utils/commonrc
-source $CONFIGS_DIR/setup.conf
+## Sourcing commonrc
+source ${CONFIG_FILE}
+source ${COMMONRC}
 logo
 
-
-# optimizing pacman
+## optimizing pacman
 pacman_optimize
 
-# loading keympap
+## loading keympap
 loadkeys $KEYMAP
 info_msg "$KEYMAP keymap loaded" # Setting time
 timedatectl set-ntp true
 timedatectl status
 info_msg "Time is set"
 
-# Partitoningn drives
+## Partitioning drives
 auto_partition() {
 
     TOTAL_MEM=$(cat /proc/meminfo | grep -i 'memtotal' | grep -o '[[:digit:]]*')
@@ -61,7 +59,7 @@ auto_partition() {
 
 auto_partition # Automatically creates partition
 
-# NOTE Making file systems
+## NOTE Making file systems
 
 fs () {
     createsubvolumes () {
@@ -108,26 +106,26 @@ fs () {
     info_msg "Successfully created filesystems"
 }
 
-fs # Making filesystems
+fs ## Making filesystems
 
-# Installing base packages
+## Installing base packages
 
 pacstrap /mnt base base-devel linux linux-firmware archlinux-keyring --noconfirm --needed
 info_msg "Installed base packages"
 
-# Copying script directory and mirrorlist to main system
+## Copying script directory and mirrorlist to main system
 cp -R ${SCRIPT_DIR} /mnt/root/archins
 info_msg "Copying script directory to main system"
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 info_msg "Copying mirrorlist to main system"
 
-# Generating file system table (FSTAB)
+## Generating file system table (FSTAB)
 genfstab -L /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
 info_msg "Generated fstab"
 
 
-# Creating linux swap file for systems that require it
+## Creating linux swap file for systems that require it
 linux_swap() {
 
     TOTAL_MEM=$(cat /proc/meminfo | grep -i 'memtotal' | grep -o '[[:digit:]]*')
@@ -153,8 +151,3 @@ linux_swap() {
 }
 
 linux_swap
-cecho "The live cd part is now concluded and execute the other scripts located /mnt/root/archins" $yellow
-echo
-read -p "Press any key to continue...."
-echo
-arch-chroot /mnt

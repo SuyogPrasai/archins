@@ -5,18 +5,18 @@
 # https://github.ocm/suyogprasai/archins
 
 # Sourcing stuff
-source $CONFIGS_DIR/setup.conf
-source $COMMONRC
+source ${CONFIGS_DIR}/setup.conf
+source ${COMMONRC}
 
 # setting up time and locale
-time_and_locale(){
+time_and_locale() {
 
-    ln -sf /usr/share/zoneinfo/$TIMEZONE  /etc/localtime # Sets local time
+    ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime # Sets local time
     hwclock --systohc
 
     sed -i '/^#\(en_US.UTF-8\)/s/#//' /etc/locale.gen
     locale-gen
-    echo "LANG=en_US.UTF-8" > /etc/locale.conf
+    echo "LANG=en_US.UTF-8" >/etc/locale.conf
     info_msg "generated locales"
 }
 
@@ -27,23 +27,14 @@ do_install sudo wget libnewt
 # Setting up hostname and network stuff
 set_hostname() {
     hostname=$NAME_OF_MACHINE
-    echo ${hostname} >> /etc/hostname
-    echo -e "\n127.0.0.1   localhost\n::1     localhost\n127.0.1.1   ${hostname}.localdomain  ${hostname}\n" >> /etc/hosts
+    echo ${hostname} >>/etc/hostname
+    echo -e "\n127.0.0.1   localhost\n::1     localhost\n127.0.1.1   ${hostname}.localdomain  ${hostname}\n" >>/etc/hosts
     info_msg "Finished setting up hostname and hosts"
 }
 
 set_hostname
 
-# Setting up users
-useradd -m $USERNAME
-info_msg "Added user $USERNAME"
 
-echo "root:$ROOT_PASSWORD" | chpasswd # Setting up ROOT password
-info_msg "Password for ROOT is set"
-echo "$USERNAME:$PASSWORD" | chpasswd # Setting up user password
-info_msg "Password for $USERNAME is set"
-
-usermod -aG wheel,audio,video,optical,storage $USERNAME
 
 sudo_config() { # Setting up sudoers file
 
@@ -57,19 +48,17 @@ sudo_config
 
 # Creating EFI Directory and mounting it
 
- mkdir -p /boot/EFI
- info_msg "Created /mnt/boot/EFI"
- mount ${partition1} /boot/EFI
- info_msg "mounted $partition1 to /mnt/boot"
-
-
+mkdir -p /boot/EFI
+info_msg "Created /mnt/boot/EFI"
+mount ${partition1} /boot/EFI
+info_msg "mounted $partition1 to /mnt/boot"
 
 grub_config() {
 
     # Installing grub and other essentials
     do_install grub efibootmgr dosfstools os-prober mtools
 
-    grub-install --target=x86_64-efi  --bootloader-id=grub_uefi --efi-directory=/boot/EFI --recheck
+    grub-install --target=x86_64-efi --bootloader-id=grub_uefi --efi-directory=/boot/EFI --recheck
     grub-mkconfig -o /boot/grub/grub.cfg
 
     info_msg "Grub installed on the system"
@@ -83,26 +72,69 @@ grub_config # Setting up grub in the system
 
 network_config() { # Network configuration
 
-    do_install "networkmanager" # Installing NetworkManager
+    do_install "networkmanager"     # Installing NetworkManager
     systemctl enable NetworkManager # Enabling NetworkManager in system
 }
 
 network_config
 
+# NOTE installing Graphics Drivers
+
+graphics_driver_setup() {
+
+    gpu_type=$(lspci)
+    if grep -E "NVIDIA|GeForce" <<<${gpu_type}; then
+        pacman -S --noconfirm --needed nvidia
+        nvidia-xconfig
+    elif lspci | grep 'VGA' | grep -E "Radeon|AMD"; then
+        pacman -S --noconfirm --needed xf86-video-amdgpu
+    elif grep -E "Integrated Graphics Controller" <<<${gpu_type}; then
+        pacman -S --noconfirm --needed libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
+    elif grep -E "Intel Corporation UHD" <<<${gpu_type}; then
+        pacman -S --needed --noconfirm libva-intel-driver libvdpau-va-gl lib32-vulkan-intel vulkan-intel libva-intel-driver libva-utils lib32-mesa
+    fi
+}
+
+graphics_driver_setup
+
 # NOTE installating microcode
 
 # determine processor type and install microcode
 proc_type=$(lscpu)
-if grep -E "GenuineIntel" <<< ${proc_type}; then
+if grep -E "GenuineIntel" <<<${proc_type}; then
     echo "Installing Intel microcode"
     pacman -S --noconfirm --needed intel-ucode
     proc_ucode=intel-ucode.img
-elif grep -E "AuthenticAMD" <<< ${proc_type}; then
+elif grep -E "AuthenticAMD" <<<${proc_type}; then
     echo "Installing AMD microcode"
     pacman -S --noconfirm --needed amd-ucode
     proc_ucode=amd-ucode.img
 fi
 
 if [[ $INSTALL_TYPE == "MINIMAL" ]]; then
-   exit
+    exit
+fi
+
+# Setting up users
+
+if [ $(whoami) = "root"  ]; then
+    groupadd libvirt
+    useradd -m -G wheel,libvirt -s /bin/bash $USERNAME 
+    info_msg "$USERNAME created, home directory created, added to wheel and libvirt group, default shell set to /bin/bash"
+
+# use chpasswd to enter root:$ROOT_PASSWORD
+    echo "root:$ROOT_PASSWORD" | chpasswd # Setting up ROOT password
+    info_msg "Password for ROOT is set"
+
+# use chpasswd to enter $USERNAME:$password
+    echo "$USERNAME:$PASSWORD" | chpasswd # Setting up user password
+    info_msg "Password for $USERNAME is set"
+
+
+	cp -R $HOME/archins /home/$USERNAME/
+    chown -R $USERNAME: /home/$USERNAME/archins
+    info_msg "archins copied to home directory"
+    
+else
+	echo "You are already a user proceed with aur installs"
 fi
