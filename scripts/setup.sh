@@ -51,10 +51,10 @@ set_password() {
 UEFI_check() {
     # Verify the boot mode
     if [[ -d /sys/firmware/efi/efivars ]]; then
-        cecho "UEFI mode is enabled on an UEFI motherboard" $cyan
+        cecho "UEFI check: OK!" $cyan
     else
         put_error "Sorry, this script only support UEFI mode for now"
-        exit 1
+        exit 0
     fi
 }
 
@@ -63,13 +63,18 @@ root_check() {
     if [[ "$(id -u)" != "0" ]]; then
         put_error "This script must be run under the 'root' user!\n"
         exit 0
+    else
+        cecho "Root Check: OK!" $cyan
     fi
+
 }
 ## Checking if the distro is arch linux or not
 arch_check() {
     if [[ ! -e /etc/arch-release ]]; then
         put_error "This script must be run in Arch Linux!\n"
         exit 0
+    else
+        cecho "Arch Check: OK!" $cyan
     fi
 }
 ## Checks Pacman ( package manager ) is working properly
@@ -78,6 +83,8 @@ pacman_check() {
         put_error "Pacman is blocked."
         put_error "If not running remove /var/lib/pacman/db.lck.\n"
         exit 0
+    else
+        cecho "Pacman Check: OK!" $cyan
     fi
 }
 ## Checks the internet
@@ -87,6 +94,8 @@ internet_check() {
         put_error "No internet connection"
         put_error "Check your internet"
         exit 0
+    else
+        cecho "Internet Check: OK!" $cyan
     fi
 }
 
