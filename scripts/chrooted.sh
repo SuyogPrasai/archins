@@ -4,11 +4,11 @@
 # https://github.com/suyogprasai/
 # https://github.ocm/suyogprasai/archins
 
-# Sourcing stuff
-source ${CONFIGS_DIR}/setup.conf
+## Sourcing stuff
+source ${CONFIG_FILE}
 source ${COMMONRC}
 
-# setting up time and locale
+## setting up time and locale
 time_and_locale() {
 
     ln -sf /usr/share/zoneinfo/$TIMEZONE /etc/localtime # Sets local time
@@ -24,7 +24,7 @@ time_and_locale
 
 do_install sudo wget libnewt
 
-# Setting up hostname and network stuff
+## Setting up hostname and network stuff
 set_hostname() {
     hostname=$NAME_OF_MACHINE
     echo ${hostname} >>/etc/hostname
@@ -34,9 +34,8 @@ set_hostname() {
 
 set_hostname
 
-
-
-sudo_config() { # Setting up sudoers file
+## Setting up the sudoers file to give root access to the user
+sudo_config() {
 
     sed -i 's/^# %wheel ALL=(ALL) ALL/%wheel ALL=(ALL) ALL/' /etc/sudoers
     sed -i 's/^# %wheel ALL=(ALL:ALL) NOPASSWD: ALL/%wheel ALL=(ALL:ALL) NOPASSWD: ALL/' /etc/sudoers
@@ -46,13 +45,7 @@ sudo_config() { # Setting up sudoers file
 
 sudo_config
 
-# Creating EFI Directory and mounting it
-
-mkdir -p /boot/EFI
-info_msg "Created /mnt/boot/EFI"
-mount ${partition1} /boot/EFI
-info_msg "mounted $partition1 to /mnt/boot"
-
+## Installing and configuring Grub to the system
 grub_config() {
 
     # Installing grub and other essentials
@@ -64,13 +57,14 @@ grub_config() {
     info_msg "Grub installed on the system"
 }
 
-# Setting multilib
+## Setting multilib repository in the system to access more software
 sed -i "/\[multilib\]/,/Include/"'s/^#//' /etc/pacman.conf
 pacman -Sy --noconfirm --needed
 
 grub_config # Setting up grub in the system
 
-network_config() { # Network configuration
+## Network configuration in the system
+network_config() {
 
     do_install "networkmanager"     # Installing NetworkManager
     systemctl enable NetworkManager # Enabling NetworkManager in system
@@ -78,8 +72,8 @@ network_config() { # Network configuration
 
 network_config
 
-# NOTE installing Graphics Drivers
 
+## Installing Graphics Drivers
 graphics_driver_setup() {
 
     gpu_type=$(lspci)
@@ -97,9 +91,9 @@ graphics_driver_setup() {
 
 graphics_driver_setup
 
-# NOTE installating microcode
+## Installating microcode
 
-# determine processor type and install microcode
+# Determine processor type and install microcode
 proc_type=$(lscpu)
 if grep -E "GenuineIntel" <<<${proc_type}; then
     echo "Installing Intel microcode"
@@ -115,7 +109,7 @@ if [[ $INSTALL_TYPE == "MINIMAL" ]]; then
     exit
 fi
 
-# Setting up users
+## Setting up users and permissions
 
 if [ $(whoami) = "root"  ]; then
     groupadd libvirt

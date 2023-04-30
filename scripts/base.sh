@@ -119,6 +119,15 @@ info_msg "Copying script directory to main system"
 cp /etc/pacman.d/mirrorlist /mnt/etc/pacman.d/mirrorlist
 info_msg "Copying mirrorlist to main system"
 
+
+
+## Creating EFI Directory and mounting it
+
+mkdir -p /mnt/boot/EFI
+info_msg "Created /mnt/boot/EFI"
+mount ${partition1} /mnt/boot/EFI
+info_msg "mounted $partition1 to /mnt/boot"
+
 ## Generating file system table (FSTAB)
 genfstab -L /mnt >> /mnt/etc/fstab
 cat /mnt/etc/fstab
