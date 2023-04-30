@@ -241,7 +241,7 @@ installType() {
 ## Installs latest archlinux keyring as it prevents errors in installing latest packages
 ## This is important as without this packages cannot be installed in the system
 archlinux_keyring_setup() {
-    pacman -S --noconfirm archlinux-keyring &>/dev/null
+    pacman -S --noconfirm archlinux-keyring # &>/dev/null
     info_msg "Keyring updated"
 }
 

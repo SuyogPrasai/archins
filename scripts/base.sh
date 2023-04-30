@@ -110,7 +110,7 @@ fs ## Making filesystems
 
 ## Installing base packages
 
-pacstrap /mnt base base-devel linux linux-firmware archlinux-keyring --noconfirm --needed
+p /mnt base base-devel linux linux-firmware archlinux-keyring --noconfirm --needed
 info_msg "Installed base packages"
 
 ## Copying script directory and mirrorlist to main system
