@@ -41,13 +41,13 @@ arch_run() {
     (bash "${SCRIPTS_DIR}/base.sh") |& tee "${LOGS_DIR}/base.log"
     (arch-chroot /mnt ${HOME}/archins/scripts/chrooted.sh) |& tee "${LOGS_DIR}/chrooted.log"
 
-    # if [[ ${INSTALL_TYPE} == "MINIMAL" ]]; then
-    #     shutdown now
-    # elif [[ ${INSTALL_TYPE} == "FULL" ]]; then
-    #     (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/pkg_install.sh |& tee ${LOGS_DIR}/pkg_install.sh)")
-    #     (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee ${LOGS_DIR}/configuration.sh)")
-    #     # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee ${LOGS_DIR}/user.sh
-    # fi
+    if [[ ${INSTALL_TYPE} == "MINIMAL" ]]; then
+        shutdown now
+    elif [[ ${INSTALL_TYPE} == "FULL" ]]; then
+        (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/pkg_install.sh |& tee ${LOGS_DIR}/pkg_install.sh)")
+        # (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee ${LOGS_DIR}/configuration.sh)")
+        # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee ${LOGS_DIR}/user.sh
+    fi
 }
 
 ## NOTE main script running function
