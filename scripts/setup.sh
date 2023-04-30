@@ -310,3 +310,54 @@ if [ -f ${CONFIG_FILE} ]; then
             ;;            
     esac
 fi
+
+
+if [ -f ${CONFIG_FILE} ]; then 
+    warn "There's already a config file in the directory"
+    echo 
+    cat ${CONFIG_FILE}
+    echo
+    answer=("Yes" "No")
+    select_option "Do you want to use this file for the installation? [${CONFIG_FILE}]?" "${answer[@]}"
+    case "${answer[$ans]}" in 
+        Yes)
+            background_checks # Does some background checks
+            clear
+            pkg_setup      # Sets up pkgs required for the install
+            ;;
+        No)
+            background_checks # Does some background checks
+            clear
+            pkg_setup      # Sets up pkgs required for the install
+            logo           # Sets up logo of the script
+            userinfo       # Asks for user information
+            filesystem     # Asks for the fs the user wants
+            timezone       # Sets the timezone of the user
+            keymap         # Sets the keympa of the user
+            diskpart       # Selects the required disk for the partitio
+            aurhelper      # Sets the aur helper
+            desktopenv     # Sets the desktop environment
+            installType    # Sets the install type
+            display_config # Finally displays the config that is generated
+            ;;
+        *)
+            echo "Invalid option: ${answer[$ans]}"
+            ;;
+    esac
+else
+    background_checks # Does some background checks
+    clear
+    pkg_setup      # Sets up pkgs required for the install
+    logo           # Sets up logo of the script
+    userinfo       # Asks for user information
+    filesystem     # Asks for the fs the user wants
+    timezone       # Sets the timezone of the user
+    keymap         # Sets the keympa of the user
+    diskpart       # Selects the required disk for the partitio
+    aurhelper      # Sets the aur helper
+    desktopenv     # Sets the desktop environment
+    installType    # Sets the install type
+    display_config # Finally displays the config that is generated    
+fi
+
+
