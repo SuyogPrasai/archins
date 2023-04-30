@@ -9,11 +9,13 @@
 ## Source other function files
 source ${COMMONRC}
 
-## Setup and generate the configuration file
-CONFIG_FILE=$CONFIGS_DIR/setup.conf
-if [ ! -f $CONFIG_FILE ]; then # check if file exists or not
-    touch -a $CONFIG_FILE      # create file if it does not exist
-fi
+config() {
+    ## Setup and generate the configuration file
+    CONFIG_FILE=$CONFIGS_DIR/setup.conf
+    if [ ! -f $CONFIG_FILE ]; then # check if file exists or not
+        touch -a $CONFIG_FILE      # create file if it does not exist
+    fi
+}
 
 ## Function of setting option
 ## $1 ==> option name
@@ -326,6 +328,7 @@ if [ -f ${CONFIG_FILE} ]; then
             pkg_setup      # Sets up pkgs required for the install
             ;;
         No)
+            config  # Creates the config file
             background_checks # Does some background checks
             clear
             pkg_setup      # Sets up pkgs required for the install
@@ -345,6 +348,7 @@ if [ -f ${CONFIG_FILE} ]; then
             ;;
     esac
 else
+    config  # Creates the config file
     background_checks # Does some background checks
     clear
     pkg_setup      # Sets up pkgs required for the install
