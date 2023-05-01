@@ -37,17 +37,18 @@ chmod +x ${SCRIPTS_DIR}/*.sh # So that we can directly execute a script later
 
 arch_run() {
 
-    (bash "${SCRIPTS_DIR}/setup.sh") |& tee "${LOGS_DIR}/setup.sh"
-    (bash "${SCRIPTS_DIR}/base.sh") |& tee "${LOGS_DIR}/base.log"
-    (arch-chroot /mnt ${HOME}/archins/scripts/chrooted.sh) |& tee "${LOGS_DIR}/chrooted.log"
+    (bash "${SCRIPTS_DIR}/setup.sh") |& tee "setup.sh"
+    (bash "${SCRIPTS_DIR}/base.sh") |& tee "base.log"
+    (arch-chroot /mnt ${HOME}/archins/scripts/chrooted.sh) |& tee "chrooted.log"
 
     if [[ ${INSTALL_TYPE} == "MINIMAL" ]]; then
         shutdown now
     elif [[ ${INSTALL_TYPE} == "FULL" ]]; then
-        (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/pkg_install.sh |& tee ${LOGS_DIR}/pkg_install.sh)")
-        # (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee ${LOGS_DIR}/configuration.sh)")
-        # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee ${LOGS_DIR}/user.sh
+        (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/pkg_install.sh |& tee pkg_install.sh)")
+        # (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee configuration.sh)")
+        # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee user.sh
     fi
+    mv *.log /mnt/home/${USERNAME}/archins/logs
 }
 
 ## NOTE main script running function
