@@ -17,6 +17,7 @@ final_pkg=${pkg_dir}/final.txt
 
 if [ ${INSTALL_TYPE} == "MINIMAL" ]
 then 
+    info_msg "Adding packages to list"
     cat ${cli_pkg} >> ${combined_pkg}
 elif [ ${INSTALL_TYPE} == "FULL" ]
 then 
@@ -24,6 +25,7 @@ then
     cat ${gui_pkg} >> ${combined_pkg}
     case $DESKTOP_ENV in 
 
+        info_msg "Adding packages to list"
         awesome)
             cat ${pkg_dir}/awesome.txt >> ${combined_pkg}
             ;;
@@ -40,14 +42,14 @@ then
             ;;
         esac
 fi
+## Removing comments in the file
 sed '/^\#/d;/^[[:space:]]*$/d' ${combined_pkg} > ${final_pkg}
 rm ${combined_pkg}
 
 
 while read -r line; 
-do
-
     pkgs+=("$(echo "$line")")
 done < ${final_pkg}
 
+## Installing the required packages in the system
 do_install "${pkgs[@]}"
