@@ -7,7 +7,7 @@
 # file: setup.sh
 
 ## Source other function files
-source ${COMMONRC}
+source "${COMMONRC}"
 
 config() {
     ## Setup and generate the configuration file
@@ -21,10 +21,10 @@ config() {
 ## $1 ==> option name
 ## $2 ==> value name
 set_option() {
-    if grep -Eq "^${1}.*" $CONFIG_FILE; then # check if option exists
-        sed -i -e "/^${1}.*/d" $CONFIG_FILE  # delete option if exists
+    if grep -Eq "^${1}.*" "$CONFIG_FILE"; then # check if option exists
+        sed -i -e "/^${1}.*/d" "$CONFIG_FILE"  # delete option if exists
     fi
-    echo "${1}=${2}" >>$CONFIG_FILE # add option
+    echo "${1}=${2}" >>"$CONFIG_FILE" # add option
 }
 
 ## Function of setting password for a given user
@@ -33,7 +33,7 @@ set_option() {
 set_password() {
     put_cutoff
     echo
-    cecho "Password for $2: " $yellow
+    cecho "Password for $2: " "$yellow"
     read -rs -p "Please enter password: " PASSWORD1
     echo -ne "\n"
     read -rs -p "Please re-enter password: " PASSWORD2
@@ -43,7 +43,7 @@ set_password() {
         set_option "$1" "$PASSWORD1"
     else
         put_error "ERROR! Passwords do not match. \n"
-        set_password $1 $2
+        set_password "$1" "$2"
     fi
     put_cutoff
 
@@ -53,7 +53,7 @@ set_password() {
 UEFI_check() {
     # Verify the boot mode
     if [[ -d /sys/firmware/efi/efivars ]]; then
-        cecho "UEFI check: OK!" $cyan
+        cecho "UEFI check: OK!" "$cyan"
     else
         put_error "Sorry, this script only support UEFI mode for now"
         exit 0
@@ -66,7 +66,7 @@ root_check() {
         put_error "This script must be run under the 'root' user!\n"
         exit 0
     else
-        cecho "Root Check: OK!" $cyan
+        cecho "Root Check: OK!" "$cyan"
     fi
 
 }
@@ -76,7 +76,7 @@ arch_check() {
         put_error "This script must be run in Arch Linux!\n"
         exit 0
     else
-        cecho "Arch Check: OK!" $cyan
+        cecho "Arch Check: OK!" "$cyan"
     fi
 }
 ## Checks Pacman ( package manager ) is working properly
@@ -86,7 +86,7 @@ pacman_check() {
         put_error "If not running remove /var/lib/pacman/db.lck.\n"
         exit 0
     else
-        cecho "Pacman Check: OK!" $cyan
+        cecho "Pacman Check: OK!" "$cyan"
     fi
 }
 ## Checks the internet
@@ -97,7 +97,7 @@ internet_check() {
         put_error "Check your internet"
         exit 0
     else
-        cecho "Internet Check: OK!" $cyan
+        cecho "Internet Check: OK!" "$cyan"
     fi
 }
 
@@ -115,8 +115,8 @@ userinfo() {
     echo # formatting
     put_cutoff # formatting
     read -p "Please enter your username: " username
-    set_option USERNAME ${username,,}
-    set_password "PASSWORD" ${username,,}
+    set_option USERNAME "${username,,}"
+    set_password "PASSWORD" "${username,,}"
     set_password "ROOT_PASSWORD" "ROOT"
     read -rep "Please enter your hostname: " nameofmachine
     set_option NAME_OF_MACHINE "${nameofmachine}"
@@ -143,12 +143,12 @@ timezone() {
     case ${options[$ans]} in
     Yes)
         info_msg "$time_zone set as timezone."
-        set_option TIMEZONE $time_zone
+        set_option TIMEZONE "$time_zone"
         ;;
     No)
         read -p "Please enter your desired timezone e.g. Europe/London: " new_timezone
         info_msg "${new_timezone} set as timezone"
-        set_option TIMEZONE $new_timezone
+        set_option TIMEZONE "$new_timezone"
         ;;
     esac
 }
@@ -159,7 +159,7 @@ keymap() {
     select_option "Please select a key board layout from this list" "${options[@]}"
     keymap=${options[${ans}]}
     info_msg "Your key board layout is set as: $keymap"
-    set_option KEYMAP $keymap
+    set_option KEYMAP "$keymap"
 }
 
 ## Selects the disk to install the system in
@@ -194,7 +194,7 @@ diskpart() {
     select_option "Select the disk to install on" "${options[@]}"
     disk=${options[$ans]%|*}
     info_msg "${disk%|*} is selected"
-    set_option DISK ${disk%|*}
+    set_option DISK "${disk%|*}"
     
     drivessd
 }
@@ -205,7 +205,7 @@ aurhelper() {
     select_option "Please enter your desired AUR helper" "${options[@]}"
     aur_helper=${options[$ans]}
     info_msg "$aur_helper selected as the aur_helper"
-    set_option AUR_HELPER $aur_helper
+    set_option AUR_HELPER "$aur_helper"
 }
 
 ## Sets desktop environment
@@ -214,7 +214,7 @@ desktopenv() {
     select_option "Please select your desired Desktop Environment" "${options[@]}"
     desktop_env=${options[$ans]}
     info_msg "$desktop_env selected as desktop environment"
-    set_option DESKTOP_ENV $desktop_env
+    set_option DESKTOP_ENV "$desktop_env"
 }
 
 ## Sets installation type
@@ -228,7 +228,7 @@ installType() {
     select_option "Please select type of installation" "${options[@]}"
     install_type=${options[$ans]}
     info_msg "Install type set as $install_type"
-    set_option INSTALL_TYPE $install_type
+    set_option INSTALL_TYPE "$install_type"
 
 }
 
@@ -261,7 +261,7 @@ display_config() { # Displays the configuration file generated by the system
     options=("Yes" "No")
     cecho "This is the configuration file!" $bold
     put_cutoff # formatting
-    cat ${CONFIG_FILE}
+    cat "${CONFIG_FILE}"
     put_cutoff # formatting
     select_option "Are you sure you want to continue?" "${options[@]}"
     case ${options[$ans]} in

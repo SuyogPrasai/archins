@@ -63,11 +63,8 @@ no_root() {
 ## puts a cuttoff with formatting
 put_cutoff() {
     _line="\n${cut_off}\n"
-    cecho $_line $cyan
-    if [[ -n "$1" ]]; then
-        echo -e "$1"
-        cecho $_line $cyan
-    fi
+    cecho $_line "$cyan"
+
 }
 
 ## Installs a set of packages
@@ -104,9 +101,9 @@ check_input() {
     local is_valid=no
     local _default=${_range:0:1} # Initializes _default with the first character of the _range
     while [[ $is_valid = 'no' ]]; do
-        read -p "Input: " ans
+        read -pr "Input: " ans
         [[ -z "$ans" ]] && ans=$_default # [[ -z "$ans" ]] checks if the variable is empty
-        ans=$(echo $ans | tr '[A-Z]' '[a-z]') # Converts values of ans variable to lower case
+        ans=$(echo "$ans" | tr '[:upper:]' '[:lower:]') # Converts values of ans variable to lower case
         if [[ "$_range" = *$ans* ]]; then
             is_valid=yes
         else
@@ -114,7 +111,7 @@ check_input() {
         fi
     done
 
-    [[ -n $2 ]] && read $2 <<<$ans # Here $ans is fed into the read statement the whatever that is stored in $ans gets assigned to variable name that is $2 ## Very useful for automating input and creating varibales within the program
+    [[ -n $2 ]] && read -r "$2" <<<"$ans" # Here $ans is fed into the read statement the whatever that is stored in $ans gets assigned to variable name that is $2 ## Very useful for automating input and creating varibales within the program
 
 }
 
