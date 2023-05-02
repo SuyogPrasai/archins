@@ -105,7 +105,7 @@ check_input() {
     local is_valid=no
     local _default=${_range:0:1} # Initializes _default with the first character of the _range
     while [[ $is_valid = 'no' ]]; do
-        read -pr "Input: " ans
+        read -p "Input: " ans
         [[ -z "$ans" ]] && ans=$_default # [[ -z "$ans" ]] checks if the variable is empty
         ans=$(echo $ans | tr '[A-Z]' '[a-z]') # Converts values of ans variable to lower case
         if [[ "$_range" = *$ans* ]]; then
