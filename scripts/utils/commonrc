@@ -64,6 +64,10 @@ no_root() {
 put_cutoff() {
     _line="\n${cut_off}\n"
     cecho $_line "$cyan"
+        if [[ -n "$1" ]]; then
+        echo -e "$1"
+        cecho $_line $cyan
+    fi
 
 }
 
@@ -103,7 +107,7 @@ check_input() {
     while [[ $is_valid = 'no' ]]; do
         read -pr "Input: " ans
         [[ -z "$ans" ]] && ans=$_default # [[ -z "$ans" ]] checks if the variable is empty
-        ans=$(echo "$ans" | tr '[:upper:]' '[:lower:]') # Converts values of ans variable to lower case
+        ans=$(echo $ans | tr '[A-Z]' '[a-z]') # Converts values of ans variable to lower case
         if [[ "$_range" = *$ans* ]]; then
             is_valid=yes
         else
