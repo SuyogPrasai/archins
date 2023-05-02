@@ -23,9 +23,11 @@ elif [ ${INSTALL_TYPE} == "FULL" ]
 then 
     cat ${cli_pkg} >> ${combined_pkg} 
     cat ${gui_pkg} >> ${combined_pkg}
+
+    info_msg "Adding packages to list"
     case $DESKTOP_ENV in 
 
-        info_msg "Adding packages to list"
+
         awesome)
             cat ${pkg_dir}/awesome.txt >> ${combined_pkg}
             ;;
@@ -47,7 +49,7 @@ sed '/^\#/d;/^[[:space:]]*$/d' ${combined_pkg} > ${final_pkg}
 rm ${combined_pkg}
 
 
-while read -r line; 
+while read -r line; do
     pkgs+=("$(echo "$line")")
 done < ${final_pkg}
 
