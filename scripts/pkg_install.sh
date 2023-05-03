@@ -5,11 +5,6 @@
 # https://github.ocm/suyogprasai/archins
 # Script for installing all the required packages in arch linux 
 
-# Some required settings to be set
-set -e
-set -euxo pipefail
-set -o pipefail
-
 source "${COMMONRC}"
 source "${CONFIG}"
 declare -a pkgs # Array declaration for installing packages
