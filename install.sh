@@ -44,11 +44,12 @@ arch_run() {
     if [[ ${INSTALL_TYPE} == "MINIMAL" ]]; then
         shutdown now
     elif [[ ${INSTALL_TYPE} == "FULL" ]]; then
-        (su "${USERNAME}" -c "(bash ${SCRIPTS_DIR}/pkg_install.sh |& tee pkg_install.sh)")
+        # (su "${USERNAME}" -c "(bash ${SCRIPTS_DIR}/pkg_install.sh |& tee pkg_install.sh)")
+        ( arch-chroot /mnt /usr/bin/runuser -u "$USERNAME" -- /home/"$USERNAME"/archins/scripts/pkg_install.sh ) |& tee "pkg_install.log"
         # (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee configuration.sh)")
         # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee user.sh
     fi
-    mv *.log /mnt/home/"${USERNAME}"/archins/logs
+    co -v  *.log /mnt/home/"${USERNAME}"/archins/logs
 }
 
 ## NOTE main script running function
