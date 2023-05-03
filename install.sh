@@ -5,10 +5,6 @@
 # @suyogprasai
 # This is my custom Arch Linux installation script.
 
-# Some required settings to be set
-set -e
-set -euxo pipefail
-set -o pipefail
 
 ## NOTE Initializing script path variables
 export SCRIPT_DIR=$PWD
