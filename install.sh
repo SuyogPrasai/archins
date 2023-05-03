@@ -38,6 +38,9 @@ chmod +x "${SCRIPTS_DIR}"/*.sh # So that we can directly execute a script later
 arch_run() {
 
     (bash "${SCRIPTS_DIR}/setup.sh") |& tee "setup.sh"
+    if [ "$exit_now" -eq 1 ]; then 
+        exit 1 
+    fi
     source "${CONFIG_FILE}"
     (bash "${SCRIPTS_DIR}/base.sh") |& tee "base.log"
     (arch-chroot /mnt "${HOME}"/archins/scripts/chrooted.sh) |& tee "chrooted.log"
