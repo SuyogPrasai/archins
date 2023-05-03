@@ -49,7 +49,7 @@ arch_run() {
         # (su "${USERNAME} -c (bash ${SCRIPTS_DIR}/configuration.sh |& tee configuration.sh)")
         # ( bash ${SCRIPTS_DIR}/user.sh ) |& tee user.sh
     fi
-    co -v  *.log /mnt/home/"${USERNAME}"/archins/logs
+    cp -v  *.log /mnt/home/"${USERNAME}"/archins/logs
 }
 
 ## NOTE main script running function
