@@ -5,6 +5,12 @@
 # https://github.ocm/suyogprasai/archins
 # Script for setting up the configuration file for installing arch linux file: base.sh
 
+
+# Some required settings to be set
+set -e
+set -euxo pipefail
+set -o pipefail
+
 clear
 ## Sourcing commonrc
 source "${CONFIG_FILE}"

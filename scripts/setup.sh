@@ -6,6 +6,11 @@
 # Script for setting up the configuration file for installing arch linux
 # file: setup.sh
 
+# Some required settings to be set
+set -e
+set -euxo pipefail
+set -o pipefail
+
 ## Source other function files
 source "${COMMONRC}"
 

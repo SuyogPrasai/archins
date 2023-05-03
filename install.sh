@@ -5,8 +5,12 @@
 # @suyogprasai
 # This is my custom Arch Linux installation script.
 
-## NOTE Initializing script path variables
+# Some required settings to be set
+set -e
+set -euxo pipefail
+set -o pipefail
 
+## NOTE Initializing script path variables
 export SCRIPT_DIR=$PWD
 export SCRIPTS_DIR=${SCRIPT_DIR}/scripts
 export CONFIGS_DIR=${SCRIPT_DIR}/configs
@@ -38,6 +42,7 @@ chmod +x "${SCRIPTS_DIR}"/*.sh # So that we can directly execute a script later
 arch_run() {
 
     (bash "${SCRIPTS_DIR}/setup.sh") |& tee "setup.sh"
+    source "${CONFIG_FILE}"
     (bash "${SCRIPTS_DIR}/base.sh") |& tee "base.log"
     (arch-chroot /mnt "${HOME}"/archins/scripts/chrooted.sh) |& tee "chrooted.log"
 
