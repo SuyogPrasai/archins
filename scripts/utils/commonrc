@@ -1,10 +1,5 @@
 #! /usr/bin/env bash
 
-# Some required settings to be set
-unset -e
-unset -euxo pipefail
-unset -o pipefail
-
 ## Color variables used later int the script
 ## Used in cecho function
 bold='\033[1m'
