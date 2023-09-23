@@ -1,4 +1,4 @@
-## This script is still in development and is not complete so please wait until further notice
+# This is project is archived and shall not recieve any updates. Thank you for your support!
 # ARCHINS
 
 ## This script installs my basic arch linux
